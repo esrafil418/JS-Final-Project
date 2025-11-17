@@ -1,18 +1,19 @@
 import { El } from "../../utils/el";
 import { HeaderBar } from "../../components/HeaderBar";
 import { SearchBar } from "../../components/SearchBar";
+import { ProductGrid } from "../../components/ProductGrid";
+
 
 export function Home() {
-  const productsWrapper = El({
-    element: "div",
-    id: "productsWrapper",
-    className: "w-[26.75rem] mt-[1rem] px-[1rem] grid grid-cols-2 gap-[1rem]",
-  });
+  const productGrid = ProductGrid({ initialPage: 1, limit: 10 });
   //   TODO add products here later
 
   window.addEventListener("search", (e) => {
     const q = e.detail.q;
     console.log(q);
+    if (productGrid && productGrid.resetAndLoad) {
+      productGrid.resetAndLoad({ newSearch: q });
+    }
     //   TODO call products later
   });
 
@@ -52,7 +53,7 @@ export function Home() {
           }),
         ],
       }),
-      productsWrapper,
+      productGrid,
       El({ element: "div", className: "h-[5.625rem]" }),
     ],
   });

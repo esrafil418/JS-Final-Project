@@ -48,6 +48,7 @@ export async function authRequest(endpoint) {
 
       // Save token in cookie
       if (data.token) {
+        localStorage.setItem("token", data.token);
         setCookie("token", data.token, 30);
       }
 

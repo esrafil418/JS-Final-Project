@@ -2,15 +2,12 @@ import { El } from "../utils/el";
 import { router } from "../utils/router";
 
 export function ProductCard({ product }) {
-  const { id, title, name, brand, price, image } = product || {};
-
-  // show shorter title: single line ellipsis
-  const titleText = title || name || "Untitled";
+  const { id, title, name, brand, price, imageURL } = product || {};
 
   const card = El({
     element: "div",
     className:
-      "w-[11.375] h-[15.25] bg-white rounded-md overflow-hidden cursor-pointer",
+      "w-[11.375rem] h-[15.25rem] bg-white rounded-md overflow-hidden cursor-pointer",
     onclick: () => {
       router.navigate(`/sneaker/item/${id}`);
     },
@@ -23,8 +20,9 @@ export function ProductCard({ product }) {
         children: [
           El({
             element: "img",
-            src: image,
-            alt: titleText,
+            src: imageURL,
+            alt: name,
+            loading: "lazy",
             className: "w-full h-full object-cover",
           }),
         ],
@@ -36,8 +34,8 @@ export function ProductCard({ product }) {
         children: [
           El({
             element: "div",
-            innerText: titleText,
-            title: titleText,
+            innerText: name,
+            title: name,
             className: "text-sm font-[500] leading-5 truncate w-[9.875rem]",
           }),
           El({
