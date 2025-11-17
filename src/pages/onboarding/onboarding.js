@@ -130,7 +130,7 @@ export function Onboarding() {
               El({
                 element: "div",
                 className:
-                  "flex flex-col justify-center items-center mt-[3rem] gap-[3rem]",
+                  "flex flex-col justify-center items-center mt-[3rem] gap-[2rem]",
                 children: [
                   El({
                     element: "p",
@@ -164,7 +164,7 @@ export function Onboarding() {
                   El({
                     element: "button",
                     className:
-                      "bg-[#212529] text-white text-[0.875rem] font-[500] px-4 w-[23.75rem] border-[1px] rounded-[1.875rem] py-[12px] mb-[1.5rem]",
+                      "bg-[#212529] text-white text-[0.875rem] font-[500] px-4 w-[23.75rem] border-[1px] rounded-[1.875rem] py-[12px]",
                     innerText: "Next",
                     onclick: () => swiper.slideNext(),
                   }),
@@ -189,7 +189,7 @@ export function Onboarding() {
               El({
                 element: "div",
                 className:
-                  "flex flex-col justify-center items-center mt-[3rem] gap-[3rem]",
+                  "flex flex-col justify-center items-center mt-[3rem] gap-[2rem]",
                 children: [
                   El({
                     element: "p",
@@ -248,7 +248,7 @@ export function Onboarding() {
               El({
                 element: "div",
                 className:
-                  "flex flex-col justify-center items-center mt-[3rem] gap-[3rem]",
+                  "flex flex-col justify-center items-center mt-[3rem] gap-[2rem]",
                 children: [
                   El({
                     element: "p",
@@ -284,7 +284,7 @@ export function Onboarding() {
                     className:
                       "bg-[#212529] text-white text-[0.875rem] font-[500] px-4 w-[23.75rem] border-[1px] rounded-[1.875rem] py-[12px] mb-[1rem]",
                     innerText: "Get Start",
-                    onclick: () => router.navigate("/home"),
+                    onclick: () => router.navigate("/signup"),
                   }),
                 ],
               }),
