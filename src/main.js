@@ -3,6 +3,7 @@ import { router } from "./utils/router";
 import { Onboarding } from "./pages/onboarding/onboarding";
 import { Auth } from "./pages/auth/auth";
 import { Home } from "./pages/home/home";
+import { checkAuthAndMaybeRedirect } from "./utils/authCheck";
 
 const app = document.getElementById("app");
 
@@ -11,4 +12,7 @@ router.addRoute("/login", () => Auth({ type: "login" }));
 router.addRoute("/signup", () => Auth({ type: "signup" }));
 router.addRoute("/", () => Home());
 
-router.init(app);
+(async () => {
+  await checkAuthAndMaybeRedirect("/sneaker?page=1&limit=1");
+  router.init(app);
+})();

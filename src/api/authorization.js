@@ -76,3 +76,19 @@ export async function authRequest(endpoint) {
     setMessage(messageId, "Cannot connect to server.");
   }
 }
+
+// const getUser = async () => {
+// const userData = await fetch(
+// "http://localhost:3000/sneaker?page=1&limit=10",
+// {
+// method: "GET",
+// headers: {
+// Accept: "*/*",
+// Authorization: "Bearer d8bd0396-4966-4461-b706-91d78577e77f",
+// },
+// }
+// );
+
+// const user = await userData.json();
+// console.log(user);
+// };
