@@ -1,35 +1,22 @@
 import { BASE_URL } from "../constants";
 import { router } from "../utils/router";
 import { store } from "../utils/store";
+import { authHelper } from "../utils/auth";
 
-//? Get input value
-function getInputValue(id) {
-  return document.getElementById(id)?.value.trim() ?? "";
-}
-
-//? Show message
-function setMessage(id, message, type = "error") {
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  el.innerText = message;
-  el.style.color = type === "success" ? "green" : "red";
-}
-
-//? Save token in Cookie
-function setCookie(name, value, days = 30) {
-  const expires = new Date(Date.now() + days * 86400000).toUTCString();
-  document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Lax;`;
-}
-
-//! Main Auth Request
+//! Main Auth Request 
 export async function authRequest(endpoint) {
-  const username = getInputValue("username");
-  const password = getInputValue("password");
-  const messageId = "log-message";
+  const usernameInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
+  const messageEl = document.getElementById("log-message");
+
+  const username = usernameInput?.value.trim() || "";
+  const password = passwordInput?.value.trim() || "";
 
   if (!username || !password) {
-    setMessage(messageId, "Please fill in all fields.");
+    if (messageEl) {
+      messageEl.innerText = "Please fill in all fields.";
+      messageEl.style.color = "red";
+    }
     return;
   }
 
@@ -43,52 +30,39 @@ export async function authRequest(endpoint) {
     const data = await res.json();
 
     if (res.ok) {
-      // Save user in store
       store.setState("user", data);
 
-      // Save token in cookie
       if (data.token) {
-        localStorage.setItem("token", data.token);
-        setCookie("token", data.token, 30);
+        authHelper.setToken(data.token);
       }
 
-      // Show success message
-      const successMsg = endpoint.includes("signup")
-        ? "Signup successful!"
-        : "Login successful!";
+      if (messageEl) {
+        const successMsg = endpoint.includes("signup")
+          ? "Registration successful! Moving to login page"
+          : "Login successful!";
 
-      setMessage(messageId, successMsg, "success");
+        messageEl.innerText = successMsg;
+        messageEl.style.color = "green";
+      }
 
-      setTimeout(() => router.navigate("/"), 1200);
+      setTimeout(() => {
+        router.navigate(endpoint.includes("signup") ? "/login" : "/");
+      }, 1500);
 
       return data;
     }
 
-    // Backend error
-    const msg = Array.isArray(data?.message)
-      ? data.message[0]
-      : data?.message || "Unspecified error";
-
-    setMessage(messageId, msg);
-    return data;
+    if (messageEl) {
+      const errorMsg = data.message || "Something went wrong";
+      messageEl.innerText = errorMsg;
+      messageEl.style.color = "red";
+    }
   } catch (err) {
-    console.error("NETWORK ERROR:", err);
-    setMessage(messageId, "Cannot connect to server.");
+    console.error("Network error:", err);
+    const messageEl = document.getElementById("log-message");
+    if (messageEl) {
+      messageEl.innerText = "Cannot connect to server.";
+      messageEl.style.color = "red";
+    }
   }
 }
-
-// const getUser = async () => {
-// const userData = await fetch(
-// "http://localhost:3000/sneaker?page=1&limit=10",
-// {
-// method: "GET",
-// headers: {
-// Accept: "*/*",
-// Authorization: "Bearer d8bd0396-4966-4461-b706-91d78577e77f",
-// },
-// }
-// );
-
-// const user = await userData.json();
-// console.log(user);
-// };

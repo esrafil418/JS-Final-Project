@@ -1,6 +1,5 @@
-// components/BottomNav.js
-import { El } from "../utils/el";
-import { router } from "../utils/router";
+import { El } from "../../utils/el";
+import { router } from "../../utils/router";
 
 export function BottomNav() {
   const navWrap = El({
