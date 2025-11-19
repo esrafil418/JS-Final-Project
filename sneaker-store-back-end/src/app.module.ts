@@ -11,6 +11,9 @@ import { UserService } from './services/user.service';
 import { SneakerService } from './services/sneakers.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SessionExpirationTaskService } from './schedulers/session-expiration.task';
+import { CartItem } from './entities/cart-item.entity';
+import { CartController } from './controllers/cart.controller';
+import { CartService } from './services/cart.service';
 
 @Module({
   imports: [
@@ -20,14 +23,15 @@ import { SessionExpirationTaskService } from './schedulers/session-expiration.ta
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([User, Session, Sneakers]),
+    TypeOrmModule.forFeature([User, Session, Sneakers, CartItem]),
     ScheduleModule.forRoot(),
   ],
-  controllers: [TaskController, AuthController, UserController],
+  controllers: [TaskController, AuthController, UserController, CartController],
   providers: [
     AuthService,
     UserService,
     SneakerService,
+    CartService,
     SessionExpirationTaskService,
   ],
 })

@@ -1,20 +1,23 @@
 export const authHelper = {
   setToken(token) {
-    console.log("Saving token:", token);
     localStorage.setItem("token", token);
   },
 
   getToken() {
-    const token = localStorage.getItem("token");
-    console.log("Retrieved token:", token);
-    return token;
+    return localStorage.getItem("token");
   },
 
-  clearToken() {
+  setUsername(username) {
+    localStorage.setItem("username", username);
+  },
+
+  getUsername() {
+    return localStorage.getItem("username");
+  },
+
+  clearAuth() {
     localStorage.removeItem("token");
-  },
-
-  isAuthenticated() {
-    return !!this.getToken();
+    localStorage.removeItem("username");
+    localStorage.removeItem("onboarded");
   },
 };

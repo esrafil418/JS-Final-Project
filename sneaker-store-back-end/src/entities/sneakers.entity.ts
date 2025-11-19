@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { User } from './user.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { CartItem } from './cart-item.entity';
 
 @Entity()
 export class Sneakers {
@@ -33,9 +33,6 @@ export class Sneakers {
   @Column({ nullable: false })
   brand: string;
 
-  @ManyToOne(() => User, (user) => user.cart, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
-  user: User;
+  @OneToMany(() => CartItem, (cartItem) => cartItem.sneaker)
+  cartItems: CartItem[];
 }

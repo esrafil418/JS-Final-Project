@@ -3,7 +3,7 @@ import { router } from "../utils/router";
 import { store } from "../utils/store";
 import { authHelper } from "../utils/auth";
 
-//! Main Auth Request 
+//! Main Auth Request
 export async function authRequest(endpoint) {
   const usernameInput = document.getElementById("username");
   const passwordInput = document.getElementById("password");
@@ -30,10 +30,16 @@ export async function authRequest(endpoint) {
     const data = await res.json();
 
     if (res.ok) {
+      console.log("data:", data);
+
       store.setState("user", data);
 
-      if (data.token) {
+      localStorage.setItem("username", username);
+      console.log("username:", username);
+
+      if (data.token && !endpoint.includes("signup")) {
         authHelper.setToken(data.token);
+        console.log("login token:", data.token);
       }
 
       if (messageEl) {
@@ -58,7 +64,7 @@ export async function authRequest(endpoint) {
       messageEl.style.color = "red";
     }
   } catch (err) {
-    console.error("Network error:", err);
+    console.error("error:", err);
     const messageEl = document.getElementById("log-message");
     if (messageEl) {
       messageEl.innerText = "Cannot connect to server.";

@@ -1,11 +1,11 @@
 import { Exclude } from 'class-transformer';
 import { Session } from 'src/entities/session.entity';
-import { Sneakers } from 'src/entities/sneakers.entity';
+import { CartItem } from 'src/entities/cart-item.entity';
 
 export class UserResDto {
   id: number;
   username: string;
-  cart: Sneakers[];
+  cart: CartItem[];
   sessions: Session[];
   @Exclude()
   password: string;

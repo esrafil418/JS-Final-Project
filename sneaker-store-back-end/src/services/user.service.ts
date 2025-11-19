@@ -11,18 +11,12 @@ import { CreateUserDto } from 'src/dto/create-user.dto';
 import { User } from 'src/entities/user.entity';
 import { LoginDto } from 'src/dto/login.dto';
 import { UpdateProfileDto } from 'src/dto/update-profile.dto';
-import { Sneakers } from 'src/entities/sneakers.entity';
-import { Session } from 'src/entities/session.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    @InjectRepository(User)
-    private sneakersRepository: Repository<Sneakers>,
-    @InjectRepository(User)
-    private sessionsRepository: Repository<Session>,
   ) {}
 
   async createNewUser(data: CreateUserDto) {
@@ -39,7 +33,7 @@ export class UserService {
   async getUserByCrendentials(data: LoginDto) {
     const user = await this.usersRepository.findOne({
       where: { username: data.username },
-      relations: { cart: true, sessions: true },
+      relations: { cart: { sneaker: true }, sessions: true },
     });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -53,7 +47,7 @@ export class UserService {
   async getUserInfo(id: number) {
     return this.usersRepository.findOne({
       where: { id },
-      relations: { cart: true, sessions: true },
+      relations: { cart: { sneaker: true }, sessions: true },
     });
   }
 

@@ -9,8 +9,7 @@ export function HeaderBar() {
   };
 
   const getUserName = () => {
-    const user = store.getState("user");
-    return user?.username || user?.user?.username || "Guest";
+    return localStorage.getItem("username");
   };
 
   return El({
