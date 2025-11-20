@@ -4,6 +4,8 @@ import { onboardingPage } from "./pages/onboarding/onboarding";
 import { AuthPage } from "./pages/auth/auth";
 import { authHelper } from "./utils/auth";
 import { Home } from "./pages/home/home";
+import { SingleProductPage } from "./pages/single-product/single-product";
+// import { CartPage } from "./pages/cart/cart"; //
 
 const app = document.getElementById("app");
 const pageContainer = document.createElement("div");
@@ -13,6 +15,8 @@ router.addRoute("/onboarding", () => onboardingPage());
 router.addRoute("/login", () => AuthPage({ type: "login" }));
 router.addRoute("/signup", () => AuthPage({ type: "signup" }));
 router.addRoute("/home", () => Home());
+router.addRoute("/product/:id", (params) => SingleProductPage(params.id));
+// router.addRoute("/cart", () => CartPage()); //
 
 router.addRoute("/", () => {
   const token = authHelper.getToken();

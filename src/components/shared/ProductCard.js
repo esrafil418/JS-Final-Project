@@ -1,5 +1,5 @@
 import { El } from "../../utils/el";
-import { router } from "../../utils/router"; 
+import { router } from "../../utils/router";
 
 export function ProductCard({ product }) {
   const { id, name, brand, price, imageURL } = product || {};
@@ -10,7 +10,7 @@ export function ProductCard({ product }) {
     element: "div",
     className:
       "w-[11.375rem] h-[15.25rem] bg-white rounded-md overflow-hidden cursor-pointer hover:shadow-md transition-shadow",
-    onclick: () => router.navigate(`/sneaker/item/${id}`),
+    onclick: () => router.navigate(`/product/${id}`),
     children: [
       // Image
       El({
@@ -20,7 +20,7 @@ export function ProductCard({ product }) {
         children: [
           El({
             element: "img",
-            src: imageURL || "/placeholder.jpg",
+            src: imageURL,
             alt: name,
             className: "w-full h-full object-cover",
           }),

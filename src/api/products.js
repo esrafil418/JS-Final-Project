@@ -1,14 +1,12 @@
 import { BASE_URL } from "../constants";
 import { authHelper } from "../utils/auth";
 
-export async function getProducts(page = 1, limit = 10, brand = "") {
+export async function getProducts() {
   try {
     const token = authHelper.getToken();
     console.log("token:", token);
 
-    const url = `${BASE_URL}/sneaker?page=${page}&limit=${limit}${
-      brand ? `&brand=${brand}` : ""
-    }`;
+    const url = `${BASE_URL}/sneaker?page=1&limit=10`;
 
     const res = await fetch(url, {
       method: "GET",

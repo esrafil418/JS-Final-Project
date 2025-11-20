@@ -32,8 +32,6 @@ export async function authRequest(endpoint) {
     if (res.ok) {
       console.log("data:", data);
 
-      store.setState("user", data);
-
       localStorage.setItem("username", username);
       console.log("username:", username);
 
@@ -54,8 +52,6 @@ export async function authRequest(endpoint) {
       setTimeout(() => {
         router.navigate(endpoint.includes("signup") ? "/login" : "/");
       }, 1500);
-
-      return data;
     }
 
     if (messageEl) {
