@@ -10,7 +10,7 @@ export function BottomNav() {
 
   const items = [
     { key: "home", icon: "/public/icons/nav-home.svg", route: "/" },
-    { key: "cart", icon: "/public/icons/nav-cart.svg" },
+    { key: "cart", icon: "/icons/nav-cart.svg", route: "/cart" },
     { key: "orders", icon: "/public/icons/nav-orders.svg" },
     { key: "wallet", icon: "/public/icons/nav-wallet.svg" },
     { key: "profile", icon: "/public/icons/nav-profile.svg" },
