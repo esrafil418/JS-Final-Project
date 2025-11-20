@@ -1,7 +1,7 @@
 import { BASE_URL } from "../constants";
 import { authHelper } from "../utils/auth";
 
-// دریافت سبد خرید
+// Get user's cart items
 export async function getCart() {
   try {
     const token = authHelper.getToken();
@@ -21,7 +21,7 @@ export async function getCart() {
   }
 }
 
-// افزودن به سبد خرید
+// Add product to cart
 export async function addToCart(productData) {
   try {
     const token = authHelper.getToken();
@@ -43,7 +43,7 @@ export async function addToCart(productData) {
   }
 }
 
-// ویرایش آیتم سبد خرید
+// Update cart item quantity or details
 export async function updateCartItem(itemId, updateData) {
   try {
     const token = authHelper.getToken();
@@ -65,7 +65,7 @@ export async function updateCartItem(itemId, updateData) {
   }
 }
 
-// حذف از سبد خرید
+// Remove item from cart
 export async function removeFromCart(itemId) {
   try {
     const token = authHelper.getToken();

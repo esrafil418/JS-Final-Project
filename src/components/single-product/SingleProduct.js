@@ -13,7 +13,9 @@ import {
 } from "./index";
 
 export function SingleProduct({ productId }) {
-  // stateهای کامپوننت
+  console.log("🎯 SingleProduct component started with productId:", productId);
+
+  // State management for component
   let product = null;
   let selectedSize = "";
   let selectedColor = "";
@@ -21,11 +23,12 @@ export function SingleProduct({ productId }) {
   let isLoading = true;
   let error = null;
 
+  // Create main container
   const container = El({
     element: "div",
     className: "min-h-screen bg-white pb-20",
     children: [
-      // دکمه برگشت
+      // Back button
       BackButton({ onClick: () => router.navigate("/home") }),
 
       // Loading state
@@ -44,22 +47,39 @@ export function SingleProduct({ productId }) {
     ],
   });
 
-  // تابع برای لود محصول
+  // Function to load product data from API
   async function loadProduct() {
     try {
       console.log("🔄 Loading product with ID:", productId);
-      isLoading = true;
 
+      // Validate productId
+      if (!productId || productId === "undefined" || productId === "null") {
+        throw new Error(`Invalid product ID: ${productId}`);
+      }
+
+      isLoading = true;
       const productData = await getProductById(productId);
       product = productData;
 
-      // مقدارهای پیش‌فرض
-      selectedSize = getAvailableSizes(productData)[0] || "";
-      selectedColor = getAvailableColors(productData)[0] || "";
+      console.log("✅ Product data received:", product);
+
+      // Set default selections
+      const availableSizes = getAvailableSizes(productData);
+      const availableColors = getAvailableColors(productData);
+
+      selectedSize = availableSizes[0] || "";
+      selectedColor = availableColors[0] || "";
+
+      console.log(
+        "🎯 Default size:",
+        selectedSize,
+        "Default color:",
+        selectedColor
+      );
 
       renderProduct();
     } catch (err) {
-      console.error("Failed to load product:", err);
+      console.error("❌ Failed to load product:", err);
       error = err.message;
       renderError();
     } finally {
@@ -67,43 +87,53 @@ export function SingleProduct({ productId }) {
     }
   }
 
-  // helper functions
+  // Helper function to extract available sizes from product data
   function getAvailableSizes(product) {
-    if (product.sizes) return product.sizes;
+    if (product.sizes && Array.isArray(product.sizes)) return product.sizes;
     if (product.sizesString) return product.sizesString.split("|");
-    return ["40", "41", "42", "43", "44"];
+    if (product.size) return [product.size];
+    return ["40", "41", "42", "43", "44"]; // Fallback sizes
   }
 
+  // Helper function to extract available colors from product data
   function getAvailableColors(product) {
-    if (product.colors) return product.colors;
+    if (product.colors && Array.isArray(product.colors)) return product.colors;
     if (product.colorsString) return product.colorsString.split("|");
-    return ["Black", "White"];
+    if (product.color) return [product.color];
+    return ["Black", "White"]; // Fallback colors
   }
 
+  // Function to render product UI
   function renderProduct() {
     const loadingEl = document.getElementById("loading-state");
     if (loadingEl) loadingEl.remove();
 
+    // Add product image
     container.appendChild(
       ProductImage({
-        imageURL: product.imageURL,
+        imageURL: product.imageURL || product.image || "/placeholder-image.jpg",
         alt: product.name,
         className: "mt-16",
       })
     );
 
+    // Add product details section
     container.appendChild(
       El({
         element: "div",
         className: "px-4 mt-6 space-y-6",
         children: [
+          // Product basic info (name, rating, description)
           ProductInfo({
             name: product.name,
-            rating: 4.5,
+            rating: product.rating || 4.5,
             description:
-              product.description || `${product.brand} - High quality sneakers`,
+              product.description ||
+              `${product.brand || "Brand"} - High quality sneakers` ||
+              "Premium quality product with excellent features.",
           }),
 
+          // Size and color selectors in grid layout
           El({
             element: "div",
             className: "grid grid-cols-2 gap-6",
@@ -128,6 +158,7 @@ export function SingleProduct({ productId }) {
             ],
           }),
 
+          // Quantity selector
           QuantityCounter({
             quantity: quantity,
             onQuantityChange: (newQuantity) => {
@@ -136,13 +167,15 @@ export function SingleProduct({ productId }) {
             },
           }),
 
+          // Separator line
           El({
             element: "hr",
             className: "border-gray-200 my-4",
           }),
 
+          // Price and add to cart section
           PriceSection({
-            price: product.price,
+            price: product.price || product.Price || 0,
             quantity: quantity,
             onAddToCart: handleAddToCart,
           }),
@@ -151,6 +184,7 @@ export function SingleProduct({ productId }) {
     );
   }
 
+  // Function to render error state
   function renderError() {
     const loadingEl = document.getElementById("loading-state");
     if (loadingEl) loadingEl.remove();
@@ -186,28 +220,45 @@ export function SingleProduct({ productId }) {
     );
   }
 
+  // Function to handle add to cart action
   const handleAddToCart = async () => {
-    if (!product) return;
+    if (!product) {
+      alert("❌ Product data is not available");
+      return;
+    }
+
+    // Validate selections
+    if (!selectedSize) {
+      alert("⚠️ Please select a size");
+      return;
+    }
+
+    if (!selectedColor) {
+      alert("⚠️ Please select a color");
+      return;
+    }
 
     try {
       const cartData = {
-        productId: product.id,
+        productId: product.id || product.pid || productId,
         size: selectedSize,
         color: selectedColor,
         quantity: quantity,
-        price: product.price,
+        price: product.price || product.Price || 0,
+        name: product.name,
+        imageURL: product.imageURL || product.image,
       };
 
       console.log("🛒 Adding to cart:", cartData);
       await addToCart(cartData);
       alert("✅ Product added to cart successfully!");
     } catch (error) {
-      console.error("Add to cart error:", error);
+      console.error("❌ Add to cart error:", error);
       alert("❌ Failed to add product to cart");
     }
   };
 
-  // لود محصول هنگام ایجاد کامپوننت
+  // Load product when component is created
   loadProduct();
 
   return container;

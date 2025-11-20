@@ -6,6 +6,6 @@ export function Slide3(onNext) {
     title: "We provide high quality products just for you",
     buttonText: "Next",
     onButtonClick: onNext,
-    activeDotIndex: 0
+    activeDotIndex: 0,
   });
 }
