@@ -13,7 +13,7 @@ export function ProductInfo({ name, rating, description }) {
       El({
         element: "div",
         className: "text-yellow-500",
-        innerText: `⭐ ${rating}/5`,
+        innerText: `⭐ ${rating}`,
       }),
       El({
         element: "hr",

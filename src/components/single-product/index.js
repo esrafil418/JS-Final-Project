@@ -1,4 +1,3 @@
-// کامپوننت‌های کوچک
 export { BackButton } from "./BackButton";
 export { ProductImage } from "./ProductImage";
 export { ProductInfo } from "./ProductInfo";

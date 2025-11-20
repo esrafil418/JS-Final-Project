@@ -1,19 +1,23 @@
 import { El } from "../../utils/el";
 
+// Color selector component for product color variations
 export function ColorSelector({ colors, selectedColor, onColorSelect }) {
   return El({
     element: "div",
     className: "space-y-3",
     children: [
+      // Section title
       El({
         element: "h3",
         className: "font-semibold text-lg",
         innerText: "Color",
       }),
+      // Color swatches container
       El({
         element: "div",
         className: "flex gap-3",
         children: colors.map((color) =>
+          // Individual color button
           El({
             element: "button",
             className: `w-10 h-10 rounded-full border-2 transition-all ${
@@ -36,7 +40,6 @@ export function ColorSelector({ colors, selectedColor, onColorSelect }) {
   });
 }
 
-// helper function برای رنگ‌ها
 function getColorCode(color) {
   const colorMap = {
     Black: "#000000",
@@ -46,5 +49,5 @@ function getColorCode(color) {
     Green: "#00FF00",
     Gray: "#808080",
   };
-  return colorMap[color] || "#CCCCCC";
+  return colorMap[color] || "#CCCCCC"; // Default fallback
 }
