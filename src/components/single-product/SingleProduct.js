@@ -12,8 +12,8 @@ import {
   PriceSection,
 } from "./index";
 
-export function SingleProduct({ productId }) {
-  console.log("🎯 SingleProduct component started with productId:", productId);
+export function SingleProduct({ sneakerId }) {
+  console.log("🎯 SingleProduct component started with sneakerId:", sneakerId);
 
   // State management for component
   let product = null;
@@ -50,15 +50,15 @@ export function SingleProduct({ productId }) {
   // Function to load product data from API
   async function loadProduct() {
     try {
-      console.log("🔄 Loading product with ID:", productId);
+      console.log("🔄 Loading product with ID:", sneakerId);
 
-      // Validate productId
-      if (!productId || productId === "undefined" || productId === "null") {
-        throw new Error(`Invalid product ID: ${productId}`);
+      // Validate sneakerId
+      if (!sneakerId || sneakerId === "undefined" || sneakerId === "null") {
+        throw new Error(`Invalid product ID: ${sneakerId}`);
       }
 
       isLoading = true;
-      const productData = await getProductById(productId);
+      const productData = await getProductById(sneakerId);
       product = productData;
 
       console.log("✅ Product data received:", product);
@@ -227,26 +227,10 @@ export function SingleProduct({ productId }) {
       return;
     }
 
-    // Validate selections
-    if (!selectedSize) {
-      alert("⚠️ Please select a size");
-      return;
-    }
-
-    if (!selectedColor) {
-      alert("⚠️ Please select a color");
-      return;
-    }
-
     try {
       const cartData = {
-        productId: product.id || product.pid || productId,
-        size: selectedSize,
-        color: selectedColor,
+        sneakerId: product.id || product.pid || sneakerId,
         quantity: quantity,
-        price: product.price || product.Price || 0,
-        name: product.name,
-        imageURL: product.imageURL || product.image,
       };
 
       console.log("🛒 Adding to cart:", cartData);

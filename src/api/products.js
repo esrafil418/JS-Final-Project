@@ -35,18 +35,14 @@ export async function getProducts(page = 1, limit = 10, brand = "") {
 }
 
 // Get single product by ID using specific endpoint
-export async function getProductById(productId) {
+export async function getProductById(sneakerId) {
   try {
-    // Validate productId first
-    if (!productId || productId === "undefined" || productId === "null") {
-      throw new Error("Invalid product ID");
-    }
+    if (!sneakerId) throw new Error("Invalid product ID");
 
-    console.log("🔍 Fetching product with ID:", productId);
-
+    console.log("🔍 Fetching product with ID:", sneakerId);
     const token = authHelper.getToken();
 
-    const response = await fetch(`${BASE_URL}/sneaker/item/${productId}`, {
+    const response = await fetch(`${BASE_URL}/sneaker/item/${sneakerId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -55,19 +51,11 @@ export async function getProductById(productId) {
       },
     });
 
-    console.log("📡 Product by ID API Response Status:", response.status);
-
     if (!response.ok) {
       throw new Error(`Failed to fetch product: ${response.status}`);
     }
 
-    const data = await response.json();
-    const product = data.data || data;
-
-    if (!product) {
-      throw new Error(`Product with ID ${productId} not found`);
-    }
-
+    const product = await response.json();
     console.log("✅ Product fetched successfully:", product);
     return product;
   } catch (error) {

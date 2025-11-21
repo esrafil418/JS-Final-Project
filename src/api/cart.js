@@ -1,7 +1,7 @@
 import { BASE_URL } from "../constants";
 import { authHelper } from "../utils/auth";
 
-// Get user's cart items
+//! Get user's cart items
 export async function getCart() {
   try {
     const token = authHelper.getToken();
@@ -21,7 +21,7 @@ export async function getCart() {
   }
 }
 
-// Add product to cart
+//! Add product to cart
 export async function addToCart(productData) {
   try {
     const token = authHelper.getToken();
@@ -43,7 +43,7 @@ export async function addToCart(productData) {
   }
 }
 
-// Update cart item quantity or details
+//! Update cart item quantity or details
 export async function updateCartItem(itemId, updateData) {
   try {
     const token = authHelper.getToken();
@@ -65,7 +65,7 @@ export async function updateCartItem(itemId, updateData) {
   }
 }
 
-// Remove item from cart
+//! Remove item from cart
 export async function removeFromCart(itemId) {
   try {
     const token = authHelper.getToken();
