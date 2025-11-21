@@ -89,18 +89,42 @@ export function SingleProduct({ sneakerId }) {
 
   // Helper function to extract available sizes from product data
   function getAvailableSizes(product) {
-    if (product.sizes && Array.isArray(product.sizes)) return product.sizes;
-    if (product.sizesString) return product.sizesString.split("|");
-    if (product.size) return [product.size];
-    return ["40", "41", "42", "43", "44"]; // Fallback sizes
+    let sizes = [];
+    // Check multiple possible field names
+    if (product.sizes && Array.isArray(product.sizes)) {
+      sizes = product.sizes.map((s) => String(s).trim());
+    } else if (product.sizesString) {
+      sizes = product.sizesString.split("|").map((s) => s.trim());
+    } else if (product.size) {
+      sizes = Array.isArray(product.size)
+        ? product.size.map((s) => String(s).trim())
+        : [String(product.size).trim()];
+    } else if (product.available_sizes) {
+      sizes = Array.isArray(product.available_sizes)
+        ? product.available_sizes.map((s) => String(s).trim())
+        : [];
+    }
+    return sizes.length > 0 ? sizes : ["40", "41", "42", "43", "44"]; // Fallback sizes
   }
 
   // Helper function to extract available colors from product data
   function getAvailableColors(product) {
-    if (product.colors && Array.isArray(product.colors)) return product.colors;
-    if (product.colorsString) return product.colorsString.split("|");
-    if (product.color) return [product.color];
-    return ["Black", "White"]; // Fallback colors
+    let colors = [];
+    // Check multiple possible field names
+    if (product.colors && Array.isArray(product.colors)) {
+      colors = product.colors.map((c) => String(c).trim());
+    } else if (product.colorsString) {
+      colors = product.colorsString.split("|").map((c) => c.trim());
+    } else if (product.color) {
+      colors = Array.isArray(product.color)
+        ? product.color.map((c) => String(c).trim())
+        : [String(product.color).trim()];
+    } else if (product.available_colors) {
+      colors = Array.isArray(product.available_colors)
+        ? product.available_colors.map((c) => String(c).trim())
+        : [];
+    }
+    return colors.length > 0 ? colors : ["Black", "White"]; // Fallback colors
   }
 
   // Function to render product UI

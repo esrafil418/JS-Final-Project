@@ -15,9 +15,7 @@ router.addRoute("/onboarding", () => onboardingPage());
 router.addRoute("/login", () => AuthPage({ type: "login" }));
 router.addRoute("/signup", () => AuthPage({ type: "signup" }));
 router.addRoute("/home", () => Home());
-router.addRoute("/product/:id", (params) =>
-  SingleProductPage({ sneakerId: params.id })
-);
+router.addRoute("/product/:id", (params) => SingleProductPage(params));
 router.addRoute("/cart", () => CartPage());
 
 router.addRoute("/", () => {

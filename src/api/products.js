@@ -2,7 +2,7 @@ import { BASE_URL } from "../constants";
 import { authHelper } from "../utils/auth";
 
 // Get paginated list of products with optional brand filtering
-export async function getProducts(page = 1, limit = 10, brand = "") {
+export async function getProducts(page = 1, limit = 100, brand = "") {
   try {
     const token = authHelper.getToken();
 
@@ -34,15 +34,16 @@ export async function getProducts(page = 1, limit = 10, brand = "") {
   }
 }
 
-// Get single product by ID using specific endpoint
+// Get single product by ID using direct API endpoint
 export async function getProductById(sneakerId) {
   try {
+    console.log("🔍 Fetching product with ID:", sneakerId);
+
     if (!sneakerId) throw new Error("Invalid product ID");
 
-    console.log("🔍 Fetching product with ID:", sneakerId);
     const token = authHelper.getToken();
 
-    const response = await fetch(`${BASE_URL}/sneaker/item/${sneakerId}`, {
+    const res = await fetch(`${BASE_URL}/sneaker/item/${sneakerId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -51,11 +52,19 @@ export async function getProductById(sneakerId) {
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch product: ${response.status}`);
+    console.log("📡 Single Product API Response Status:", res.status);
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch product: ${res.status}`);
     }
 
-    const product = await response.json();
+    const data = await res.json();
+    const product = data.data || data;
+
+    if (!product) {
+      throw new Error(`Product with ID ${sneakerId} not found`);
+    }
+
     console.log("✅ Product fetched successfully:", product);
     return product;
   } catch (error) {
@@ -88,5 +97,6 @@ export async function getBrands() {
     return data;
   } catch (error) {
     console.error("❌ Brands API Error:", error);
+    throw error;
   }
 }
