@@ -5,7 +5,7 @@ import { AuthPage } from "./pages/auth/auth";
 import { authHelper } from "./utils/auth";
 import { Home } from "./pages/home/home";
 import { SingleProductPage } from "./pages/single-product/single-product";
-import { CartPage } from "./pages/cart/cart"; 
+import { CartPage } from "./pages/cart/cart";
 
 const app = document.getElementById("app");
 const pageContainer = document.createElement("div");
@@ -16,7 +16,7 @@ router.addRoute("/login", () => AuthPage({ type: "login" }));
 router.addRoute("/signup", () => AuthPage({ type: "signup" }));
 router.addRoute("/home", () => Home());
 router.addRoute("/product/:id", (params) =>
-  SingleProductPage({ productId: params.id })
+  SingleProductPage({ sneakerId: params.id })
 );
 router.addRoute("/cart", () => CartPage());
 
