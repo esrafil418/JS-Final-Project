@@ -1,5 +1,6 @@
 import { El } from "../../../utils/el";
 import { router } from "../../../utils/router";
+import { ROUTES } from "../../../constants";
 
 export function SwitchButton(type, switchRoute, switchText) {
   return El({
@@ -11,7 +12,7 @@ export function SwitchButton(type, switchRoute, switchText) {
       {
         event: "click",
         callback: () =>
-          router.navigate(type === "login" ? "/signup" : "/login"),
+          router.navigate(type === "login" ? ROUTES.SIGNUP : ROUTES.LOGIN),
       },
     ],
   });

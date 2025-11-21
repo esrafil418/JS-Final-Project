@@ -1,7 +1,9 @@
+import { APP_KEYS } from "../constants";
+
 export const authHelper = {
   setToken(token) {
     // localStorage.setItem("token", token);
-    //? save to cookie for (1) day 
+    //? save to cookie for (1) day
     document.cookie = `token=${token}; path=/; max-age=86400;`;
   },
 
@@ -13,16 +15,16 @@ export const authHelper = {
   },
 
   setUsername(username) {
-    localStorage.setItem("username", username);
+    localStorage.setItem(APP_KEYS.USERNAME, username);
   },
 
   getUsername() {
-    return localStorage.getItem("username");
+    return localStorage.getItem(APP_KEYS.USERNAME);
   },
 
   clearAuth() {
-    document.cookie = "token=; path=/; max-age=0"
-    localStorage.removeItem("username");
-    localStorage.removeItem("onboarded");
+    document.cookie = "token=; path=/; max-age=0";
+    localStorage.removeItem(APP_KEYS.USERNAME);
+    localStorage.removeItem(APP_KEYS.ONBOARDED);
   },
 };

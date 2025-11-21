@@ -8,6 +8,7 @@ import { usernameInput } from "../base/inputs/UsernameInput";
 import { PasswordInput } from "../base/inputs/PasswordInput";
 import { SwitchButton } from "../base/buttons/SwitchButton";
 import { SubmitButton } from "../base/buttons/SubmitButton";
+import { ROUTES } from "../../constants";
 
 export function updateButtonState() {
   const username = document.getElementById("username").value.trim();
@@ -28,7 +29,7 @@ export function updateButtonState() {
 export function AuthForm({ type, title, buttonText, switchText, switchRoute }) {
   let showPassword = false;
 
-  const endpoint = type === "login" ? "/auth/login" : "/auth/signup";
+  const endpoint = type === "login" ? ROUTES.LOGIN : ROUTES.SIGNUP;
 
   const container = El({
     element: "div",
@@ -36,7 +37,7 @@ export function AuthForm({ type, title, buttonText, switchText, switchRoute }) {
       "w-full h-screen flex flex-col items-center relative overflow-hidden",
     children: [
       // Back button
-      BackButton("/onboarding"),
+      BackButton(ROUTES.ONBOARDING),
 
       // Logo
       Logo(),

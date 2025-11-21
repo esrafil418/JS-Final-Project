@@ -5,10 +5,12 @@ export const ROUTES = {
   LOGIN: "/login",
   SIGNUP: "/signup",
   ONBOARDING: "/onboarding",
+  CART: "/cart",
+  PRODUCT: (id = ":id") => `/product/${id}`,
 };
 
-export const STORAGE_KEYS = {
+export const APP_KEYS = {
   TOKEN: "token",
   ONBOARDED: "onboarded",
-  USER: "user",
+  USERNAME: "username",
 };
