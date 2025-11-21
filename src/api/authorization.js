@@ -37,7 +37,7 @@ export async function authRequest(endpoint) {
       console.log("data:", data);
 
       // Store username in localStorage
-      localStorage.setItem("username", username);
+      authHelper.setUsername(username);
       console.log("username:", username);
 
       // Store token if it's a login request (not signup)
@@ -59,11 +59,11 @@ export async function authRequest(endpoint) {
       // Redirect after delay
       setTimeout(() => {
         router.navigate(endpoint.includes("signup") ? "/login" : "/");
-      }, 1500);
+      }, 2000);
     }
 
     // Handle error response from server
-    if (messageEl) {
+    if (!res.ok && messageEl) {
       const errorMsg = data.message || "Something went wrong";
       messageEl.innerText = errorMsg;
       messageEl.style.color = "red";

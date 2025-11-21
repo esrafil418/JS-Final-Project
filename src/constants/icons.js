@@ -9,4 +9,7 @@ export const ICONS = {
   PROFILE: "/icons/nav-profile.svg",
   EYE: "/icons/eye-svgrepo-com.svg",
   EYE_SLASH: "/icons/eye-slash-fill-svgrepo-com.svg",
+  LOGO: "/icons/Vector 1.png",
+  EMAIL: "/icons/email-14-svgrepo-com.svg",
+  LOCK: "/icons/lock-svgrepo-com.svg",
 };
