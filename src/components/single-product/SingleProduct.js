@@ -88,43 +88,53 @@ export function SingleProduct({ sneakerId }) {
   }
 
   // Helper function to extract available sizes from product data
+  // Backend returns sizes as pipe-delimited string: "41|43|45"
   function getAvailableSizes(product) {
     let sizes = [];
-    // Check multiple possible field names
-    if (product.sizes && Array.isArray(product.sizes)) {
-      sizes = product.sizes.map((s) => String(s).trim());
-    } else if (product.sizesString) {
-      sizes = product.sizesString.split("|").map((s) => s.trim());
+
+    if (product.sizes) {
+      if (typeof product.sizes === "string") {
+        // Pipe-delimited string: "41|43|45"
+        sizes = product.sizes.split("|").map((s) => s.trim());
+      } else if (Array.isArray(product.sizes)) {
+        sizes = product.sizes.map((s) => String(s).trim());
+      }
     } else if (product.size) {
-      sizes = Array.isArray(product.size)
-        ? product.size.map((s) => String(s).trim())
-        : [String(product.size).trim()];
-    } else if (product.available_sizes) {
-      sizes = Array.isArray(product.available_sizes)
-        ? product.available_sizes.map((s) => String(s).trim())
-        : [];
+      if (typeof product.size === "string") {
+        sizes = product.size.split("|").map((s) => s.trim());
+      } else if (Array.isArray(product.size)) {
+        sizes = product.size.map((s) => String(s).trim());
+      } else {
+        sizes = [String(product.size).trim()];
+      }
     }
-    return sizes.length > 0 ? sizes : ["40", "41", "42", "43", "44"]; // Fallback sizes
+
+    return sizes.length > 0 ? sizes : ["40", "41", "42", "43", "44"];
   }
 
   // Helper function to extract available colors from product data
+  // Backend returns colors as pipe-delimited string: "black|brown|white|blue|red"
   function getAvailableColors(product) {
     let colors = [];
-    // Check multiple possible field names
-    if (product.colors && Array.isArray(product.colors)) {
-      colors = product.colors.map((c) => String(c).trim());
-    } else if (product.colorsString) {
-      colors = product.colorsString.split("|").map((c) => c.trim());
+
+    if (product.colors) {
+      if (typeof product.colors === "string") {
+        // Pipe-delimited string: "black|brown|white|blue|red"
+        colors = product.colors.split("|").map((c) => c.trim());
+      } else if (Array.isArray(product.colors)) {
+        colors = product.colors.map((c) => String(c).trim());
+      }
     } else if (product.color) {
-      colors = Array.isArray(product.color)
-        ? product.color.map((c) => String(c).trim())
-        : [String(product.color).trim()];
-    } else if (product.available_colors) {
-      colors = Array.isArray(product.available_colors)
-        ? product.available_colors.map((c) => String(c).trim())
-        : [];
+      if (typeof product.color === "string") {
+        colors = product.color.split("|").map((c) => c.trim());
+      } else if (Array.isArray(product.color)) {
+        colors = product.color.map((c) => String(c).trim());
+      } else {
+        colors = [String(product.color).trim()];
+      }
     }
-    return colors.length > 0 ? colors : ["Black", "White"]; // Fallback colors
+
+    return colors.length > 0 ? colors : ["Black", "White"];
   }
 
   // Function to render product UI
@@ -251,10 +261,22 @@ export function SingleProduct({ sneakerId }) {
       return;
     }
 
+    if (!selectedSize) {
+      alert("⚠️ Please select a size");
+      return;
+    }
+
+    if (!selectedColor) {
+      alert("⚠️ Please select a color");
+      return;
+    }
+
     try {
       const cartData = {
         sneakerId: product.id || product.pid || sneakerId,
         quantity: quantity,
+        size: selectedSize,
+        color: selectedColor,
       };
 
       console.log("🛒 Adding to cart:", cartData);

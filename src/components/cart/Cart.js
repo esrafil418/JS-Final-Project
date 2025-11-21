@@ -48,7 +48,63 @@ export function Cart() {
   async function loadCart() {
     try {
       const cartData = await getCart();
-      cartItems = cartData.items || [];
+
+      let rawItems = [];
+      if (Array.isArray(cartData)) {
+        rawItems = cartData;
+      } else if (Array.isArray(cartData.items)) {
+        rawItems = cartData.items;
+      } else if (Array.isArray(cartData.cart)) {
+        rawItems = cartData.cart;
+      } else if (cartData.user && Array.isArray(cartData.user.cart)) {
+        rawItems = cartData.user.cart;
+      } else if (Array.isArray(cartData.data)) {
+        rawItems = cartData.data;
+      } else {
+        rawItems = [];
+      }
+
+      function mapCartItem(raw) {
+        const sneaker = raw.sneaker || raw.product || raw.item || {};
+        const price =
+          (sneaker && (sneaker.price ?? sneaker.Price)) ?? raw.price ?? 0;
+        const imageURL =
+          sneaker.imageURL ||
+          sneaker.image ||
+          raw.imageURL ||
+          raw.image ||
+          "/images/placeholder-image.jpg";
+
+        const size =
+          raw.size ??
+          raw.selectedSize ??
+          raw.sizeSelected ??
+          (typeof sneaker.sizes === "string"
+            ? sneaker.sizes.split("|")[0]
+            : Array.isArray(sneaker.sizes)
+            ? sneaker.sizes[0]
+            : "");
+        const color =
+          raw.color ??
+          raw.selectedColor ??
+          (typeof sneaker.colors === "string"
+            ? sneaker.colors.split("|")[0]
+            : Array.isArray(sneaker.colors)
+            ? sneaker.colors[0]
+            : "");
+
+        return {
+          id: raw.id ?? raw._id ?? sneaker.id,
+          quantity: raw.quantity ?? raw.qty ?? 1,
+          price: Number(price) || 0,
+          name: sneaker.name || raw.name || "",
+          imageURL,
+          size,
+          color,
+        };
+      }
+
+      cartItems = rawItems.map(mapCartItem);
       totalPrice = calculateTotalPrice();
       renderCart();
     } catch (error) {
@@ -63,13 +119,24 @@ export function Cart() {
     renderCart();
   }
 
-  async function confirmRemove() {
+  async function confirmRemove(passedItem) {
+    const target = passedItem || itemToRemove;
+    if (!target) {
+      console.error("No item to remove (itemToRemove is null)");
+      showRemoveModal = false;
+      itemToRemove = null;
+      renderCart();
+      return;
+    }
+
     try {
-      await removeFromCart(itemToRemove.id);
-      cartItems = cartItems.filter((item) => item.id !== itemToRemove.id);
+      await removeFromCart(target.id);
+      cartItems = cartItems.filter((item) => item.id !== target.id);
       totalPrice = calculateTotalPrice();
       showRemoveModal = false;
       itemToRemove = null;
+      const existingModal = document.getElementById("remove-modal");
+      if (existingModal) existingModal.remove();
       renderCart();
     } catch (error) {
       console.error("Failed to remove item:", error);
@@ -110,7 +177,12 @@ export function Cart() {
       })
     );
 
+    // Remove any existing cart summary to avoid duplicates
+    const existingSummary = document.getElementById("cart-summary");
+    if (existingSummary) existingSummary.remove();
+
     if (cartItems.length > 0) {
+      // Append the cart summary to the container (it has id 'cart-summary')
       container.appendChild(
         CartSummary({
           totalPrice,
@@ -120,10 +192,15 @@ export function Cart() {
     }
 
     if (showRemoveModal && itemToRemove) {
+      // remove any existing modal first
+      const existing = document.getElementById("remove-modal");
+      if (existing) existing.remove();
+
       document.body.appendChild(
         RemoveModal({
           item: itemToRemove,
-          onConfirm: confirmRemove,
+          // pass the current item to the confirm handler to avoid closure/null issues
+          onConfirm: () => confirmRemove(itemToRemove),
           onCancel: cancelRemove,
         })
       );
