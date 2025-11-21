@@ -1,6 +1,6 @@
-import { BASE_URL } from "../constants";
-import { router } from "../utils/router";
-import { authHelper } from "../utils/auth";
+import { BASE_URL } from "../../constants";
+import { router } from "../../utils/router";
+import { authHelper } from "../../utils/auth";
 
 //! Main Auth Request - Handles both login and signup
 export async function authRequest(endpoint) {

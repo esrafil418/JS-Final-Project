@@ -1,6 +1,6 @@
 import { El } from "../../utils/el";
 import { ProductCard } from "../shared/ProductCard";
-import { getProducts } from "../../api/products";
+import { getProducts } from "../../api";
 
 export function ProductGrid() {
   console.log("🔄 ProductGrid component initialized");

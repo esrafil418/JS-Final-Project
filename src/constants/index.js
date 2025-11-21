@@ -14,3 +14,9 @@ export const APP_KEYS = {
   ONBOARDED: "onboarded",
   USERNAME: "username",
 };
+
+export const API_ENDPOINTS = {
+  PRODUCTS: "/sneaker",
+  PRODUCT_ITEM: "/sneaker/item",
+  BRANDS: "/sneaker/brands",
+};

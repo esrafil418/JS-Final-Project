@@ -1,5 +1,5 @@
 import { El } from "../../../utils/el";
-import { authRequest } from "../../../api/authorization";
+import { authRequest } from "../../../api/auth/authorization";
 
 export function SubmitButton(buttonText, endpoint) {
   return El({

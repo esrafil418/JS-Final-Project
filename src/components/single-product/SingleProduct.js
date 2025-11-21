@@ -1,7 +1,7 @@
 import { El } from "../../utils/el";
 import { router } from "../../utils/router";
 import { addToCart } from "../../api/cart";
-import { getProductById } from "../../api/products";
+import { getProductById } from "../../api"; 
 import {
   BackButton,
   ProductImage,

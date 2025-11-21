@@ -1,5 +1,5 @@
 import { El } from "../../utils/el";
-import { getBrands } from "../../api/products";
+import { getBrands } from "../../api";
 
 export function BrandScroller({ onBrandChange } = {}) {
   // Array to store the list of available brands
