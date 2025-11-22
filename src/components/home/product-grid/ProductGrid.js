@@ -120,7 +120,7 @@ export function ProductGrid() {
   window.addEventListener("brandChange", (e) =>
     handleBrandChange(e.detail.brand)
   );
-  window.addEventListener("search", (e) => handleSearch(e.detail.query));
+  window.addEventListener("searchChange", (e) => handleSearch(e.detail.query));
   window.addEventListener("scroll", handleScroll);
 
   loadProducts(1, true, currentBrand);
