@@ -1,5 +1,5 @@
 //! for Search section
-export function debounce(fn, wait = 3000) {
+export function debounce(fn, wait = 300) {
   let timeout;
   return (...args) => {
     clearTimeout(timeout);

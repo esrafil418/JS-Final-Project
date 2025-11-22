@@ -1,5 +1,7 @@
-import { El } from "../../utils/el";
-import { router } from "../../utils/router";
+import { El } from "../../../utils/el";
+import { router } from "../../../utils/router";
+import { ICONS } from "../../../constants/icons";
+import { ROUTES } from "../../../constants";
 
 export function BottomNav() {
   const navWrap = El({
@@ -9,15 +11,15 @@ export function BottomNav() {
   });
 
   const items = [
-    { key: "home", icon: "/public/icons/nav-home.svg", route: "/" },
-    { key: "cart", icon: "/icons/nav-cart.svg", route: "/cart" },
-    { key: "orders", icon: "/public/icons/nav-orders.svg" },
-    { key: "wallet", icon: "/public/icons/nav-wallet.svg" },
-    { key: "profile", icon: "/public/icons/nav-profile.svg" },
+    { key: "home", icon: ICONS.HOME, route: ROUTES.HOME },
+    { key: "cart", icon: ICONS.CART, route: ROUTES.CART },
+    { key: "orders", icon: ICONS.ORDERS },
+    { key: "wallet", icon: ICONS.WALLET },
+    { key: "profile", icon: ICONS.PROFILE },
   ];
 
   function getCurrentPath() {
-    return window.location.pathname || "/";
+    return window.location.pathname || ROUTES.HOME;
   }
 
   function render() {
@@ -34,6 +36,7 @@ export function BottomNav() {
           {
             event: "click",
             callback: () => {
+              if (it.route) router.navigate(it.route);
               router.navigate(it.route);
               setTimeout(render, 50);
             },

@@ -76,3 +76,6 @@ export const BASE_URL = 'http://localhost:3000';
 
 - GET /sneaker?page=1&limit=10 - Get products (requires auth)
 ```
+
+
+https://www.joshwcomeau.com/css/pixel-perfection/

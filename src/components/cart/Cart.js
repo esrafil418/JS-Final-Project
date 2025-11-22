@@ -3,7 +3,7 @@ import { CartHeader } from "./CartHeader";
 import { CartList } from "./CartList";
 import { CartSummary } from "./CartSummary";
 import { RemoveModal } from "./RemoveModal";
-import { BottomNav } from "../layout/BottomNav";
+import { BottomNav } from "../shared/botton-navbar";
 import { getCart, removeFromCart, updateCartItem } from "../../api/cart";
 
 export function Cart() {

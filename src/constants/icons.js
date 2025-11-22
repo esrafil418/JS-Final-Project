@@ -12,4 +12,5 @@ export const ICONS = {
   LOGO: "/icons/Vector 1.png",
   EMAIL: "/icons/email-14-svgrepo-com.svg",
   LOCK: "/icons/lock-svgrepo-com.svg",
+  HAND_EMOJI: "/images/👋.png",
 };

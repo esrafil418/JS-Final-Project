@@ -5,7 +5,7 @@ import {
   BrandScroller,
   ProductGrid,
 } from "../../components/home";
-import { BottomNav } from "../../components/layout";
+import { BottomNav } from "../../components/shared/botton-navbar";
 
 export function Home() {
   return El({
