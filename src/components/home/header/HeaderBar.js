@@ -12,7 +12,7 @@ export function HeaderBar() {
   return El({
     element: "div",
     className:
-      "w-[23.75rem] h-20 flex items-center justify-between px-4 mx-auto",
+      "w-[23.75rem] h-[5rem] flex items-center justify-between mx-auto !mb-[0.5rem]",
     children: [
       //! Left section: Greeting and username
       El({
@@ -25,7 +25,7 @@ export function HeaderBar() {
               El({
                 element: "span",
                 innerText: getGreeting(),
-                className: "text-base font-medium",
+                className: "text-[1rem] font-500 text-[#757475]",
               }),
               El({
                 element: "img",
@@ -38,7 +38,7 @@ export function HeaderBar() {
           El({
             element: "div",
             innerText: getUserName(),
-            className: "text-base font-bold text-[#152536] mt-2",
+            className: "text-[1rem] font-bold text-[#152536] mt-[0.625rem]",
           }),
         ],
       }),

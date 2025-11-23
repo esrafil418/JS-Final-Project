@@ -2,6 +2,7 @@ import { El } from "../../utils/el";
 import {
   HeaderBar,
   SearchBar,
+  MostPopular,
   BrandScroller,
   ProductGrid,
 } from "../../components/home";
@@ -15,7 +16,13 @@ export function Home() {
       El({
         element: "div",
         className: "space-y-6 pb-6",
-        children: [HeaderBar(), SearchBar(), BrandScroller(), ProductGrid()],
+        children: [
+          HeaderBar(),
+          SearchBar(),
+          MostPopular(),
+          BrandScroller(),
+          ProductGrid(),
+        ],
       }),
       BottomNav(),
     ],

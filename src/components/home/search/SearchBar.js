@@ -18,12 +18,13 @@ export function SearchBar({ placeholder = "Search", onSearch } = {}) {
       El({
         element: "img",
         src: ICONS.SEARCH,
-        className: "w-[1.125rem] h-[1.125rem] mx-3",
+        className: "w-[1.125rem] h-[1.125rem] ml-3 mr-[2.5px]",
       }),
       El({
         element: "input",
         placeholder,
-        className: "bg-transparent w-full h-full outline-none text-sm",
+        className:
+          "bg-transparent w-full h-full outline-none text-[0.875rem] text-[#BAB8BC]",
         eventListener: [
           {
             event: "input",

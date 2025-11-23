@@ -27,6 +27,11 @@ export function BrandScroller() {
 
   container.appendChild(swiperContainer);
 
+  function capitalize(str) {
+    const val = String(str).toLowerCase();
+    return val.charAt(0).toUpperCase() + val.slice(1);
+  }
+
   let swiper;
 
   function createBrandSlide(label) {
@@ -38,10 +43,10 @@ export function BrandScroller() {
       children: [
         El({
           element: "button",
-          innerText: label,
-          className: `px-3 py-1 rounded-full text-sm whitespace-nowrap transition-all ${
+          innerText: capitalize(label),
+          className: `px-4 py-2 rounded-[1.5625rem] text-[1rem] font-600 text-[#343A40] whitespace-nowrap transition-all ${
             isSelected
-              ? "bg-black text-white shadow-sm"
+              ? "bg-[#343A40] text-white shadow-sm"
               : "bg-white border border-gray-200 text-gray-700 hover:scale-105 hover:border-gray-300"
           }`,
           eventListener: [
