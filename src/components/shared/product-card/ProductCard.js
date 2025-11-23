@@ -1,8 +1,8 @@
-import { El } from "../../utils/el";
-import { router } from "../../utils/router";
+import { El } from "../../../utils/el";
+import { router } from "../../../utils/router";
 
 export function ProductCard({ product }) {
-  const { id, name, brand, price, imageURL } = product || {};
+  const { id, name, price, imageURL } = product || {};
 
   if (!id) return null;
 
@@ -35,11 +35,6 @@ export function ProductCard({ product }) {
             element: "div",
             innerText: name,
             className: "text-sm font-medium truncate",
-          }),
-          El({
-            element: "div",
-            innerText: brand,
-            className: "text-xs text-gray-500",
           }),
           El({
             element: "div",

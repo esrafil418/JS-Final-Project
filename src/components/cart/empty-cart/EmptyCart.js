@@ -1,5 +1,5 @@
-import { El } from "../../utils/el";
-import { router } from "../../utils/router";
+import { El } from "../../../utils/el";
+import { router } from "../../../utils/router";
 
 export function EmptyCart() {
   return El({
@@ -9,27 +9,29 @@ export function EmptyCart() {
       El({
         element: "div",
         className: "text-6xl mb-4",
-        innerText: "🛒"
+        innerText: "🛒",
       }),
       El({
         element: "h2",
         className: "text-xl font-bold mb-2",
-        innerText: "Your cart is empty"
+        innerText: "Your cart is empty",
       }),
       El({
         element: "p",
         className: "text-gray-500 text-center mb-6",
-        innerText: "Looks like you haven't added any items to your cart yet."
+        innerText: "Looks like you haven't added any items to your cart yet.",
       }),
       El({
         element: "button",
         className: "bg-black text-white px-6 py-3 rounded-lg",
         innerText: "Start Shopping",
-        eventListener: [{
-          event: "click",
-          callback: () => router.navigate("/home")
-        }]
-      })
-    ]
+        eventListener: [
+          {
+            event: "click",
+            callback: () => router.navigate("/home"),
+          },
+        ],
+      }),
+    ],
   });
 }

@@ -1,5 +1,5 @@
 import { El } from "../../../utils/el";
-import { ProductCard } from "../../shared/ProductCard";
+import { ProductCard } from "../../shared/product-card/ProductCard";
 import { getProducts } from "../../../api";
 
 export function ProductGrid() {

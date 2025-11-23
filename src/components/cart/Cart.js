@@ -1,10 +1,41 @@
 import { El } from "../../utils/el";
-import { CartHeader } from "./CartHeader";
-import { CartList } from "./CartList";
-import { CartSummary } from "./CartSummary";
-import { RemoveModal } from "./RemoveModal";
+import { CartHeader } from "./cart-header/CartHeader";
+import { CartList } from "./cart-list/CartList";
+import { CartSummary } from "./cart-summary/CartSummary";
+import { RemoveModal } from "./remove-modal/RemoveModal";
 import { BottomNav } from "../shared/botton-navbar";
-import { getCart, removeFromCart, updateCartItem } from "../../api/cart";
+import { getCart, removeFromCart, updateCartItem } from "../../api/cart/cart";
+
+
+function loadLocalEntries(productId) {
+  const data = localStorage.getItem(`cart_item_${productId}`);
+  return data ? JSON.parse(data) : [];
+}
+
+function saveLocalEntries(productId, entries) {
+  localStorage.setItem(`cart_item_${productId}`, JSON.stringify(entries));
+}
+
+function addLocalEntry(productId, entry) {
+  const entries = loadLocalEntries(productId);
+  entries.push(entry);
+  saveLocalEntries(productId, entries);
+}
+
+function updateLocalEntry(productId, localId, patch) {
+  const entries = loadLocalEntries(productId);
+  const idx = entries.findIndex((e) => e.localId === localId);
+  if (idx === -1) return;
+  entries[idx] = { ...entries[idx], ...patch };
+  saveLocalEntries(productId, entries);
+}
+
+function removeLocalEntry(productId, localId) {
+  const entries = loadLocalEntries(productId).filter(
+    (e) => e.localId !== localId
+  );
+  saveLocalEntries(productId, entries);
+}
 
 export function Cart() {
   let cartItems = [];
@@ -47,64 +78,64 @@ export function Cart() {
 
   async function loadCart() {
     try {
-      const cartData = await getCart();
+      const backendCart = await getCart();
 
       let rawItems = [];
-      if (Array.isArray(cartData)) {
-        rawItems = cartData;
-      } else if (Array.isArray(cartData.items)) {
-        rawItems = cartData.items;
-      } else if (Array.isArray(cartData.cart)) {
-        rawItems = cartData.cart;
-      } else if (cartData.user && Array.isArray(cartData.user.cart)) {
-        rawItems = cartData.user.cart;
-      } else if (Array.isArray(cartData.data)) {
-        rawItems = cartData.data;
-      } else {
-        rawItems = [];
-      }
+      if (Array.isArray(backendCart)) rawItems = backendCart;
+      else if (Array.isArray(backendCart.items)) rawItems = backendCart.items;
+      else if (Array.isArray(backendCart.cart)) rawItems = backendCart.cart;
+      else if (backendCart.user && Array.isArray(backendCart.user.cart))
+        rawItems = backendCart.user.cart;
+      else rawItems = [];
 
       function mapCartItem(raw) {
-        const sneaker = raw.sneaker || raw.product || raw.item || {};
-        const price =
-          (sneaker && (sneaker.price ?? sneaker.Price)) ?? raw.price ?? 0;
-        const imageURL =
-          sneaker.imageURL ||
-          sneaker.image ||
-          raw.imageURL ||
-          raw.image ||
-          "/images/placeholder-image.jpg";
+        const sneaker = raw.sneaker || raw.product || {};
 
-        const size =
-          raw.size ??
-          raw.selectedSize ??
-          raw.sizeSelected ??
-          (typeof sneaker.sizes === "string"
-            ? sneaker.sizes.split("|")[0]
-            : Array.isArray(sneaker.sizes)
-            ? sneaker.sizes[0]
-            : "");
-        const color =
-          raw.color ??
-          raw.selectedColor ??
-          (typeof sneaker.colors === "string"
-            ? sneaker.colors.split("|")[0]
-            : Array.isArray(sneaker.colors)
-            ? sneaker.colors[0]
-            : "");
+        // cartItemId is the backend cart record id (used for PATCH/DELETE)
+        const cartItemId = raw.id ?? raw._id ?? null;
+        // productId is the sneaker/product id used for local storage of selected size/color
+        const productId = sneaker.id ?? sneaker.pid ?? null;
 
-        return {
-          id: raw.id ?? raw._id ?? sneaker.id,
-          quantity: raw.quantity ?? raw.qty ?? 1,
-          price: Number(price) || 0,
-          name: sneaker.name || raw.name || "",
-          imageURL,
-          size,
-          color,
-        };
+        const localEntries = productId ? loadLocalEntries(productId) : [];
+
+
+        if (localEntries && localEntries.length > 0) {
+          return localEntries.map((le) => ({
+            id: cartItemId,
+            productId,
+            localId: le.localId,
+            name: sneaker.name ?? raw.name ?? "",
+            imageURL:
+              sneaker.imageURL ??
+              raw.imageURL ??
+              "/images/placeholder-image.jpg",
+            price: Number(raw.price ?? sneaker.price ?? 0),
+            quantity: le.quantity ?? 1,
+            size: le.size ?? null,
+            color: le.color ?? null,
+          }));
+        }
+
+
+        return [
+          {
+            id: cartItemId,
+            productId,
+            localId: null,
+            name: sneaker.name ?? raw.name ?? "",
+            imageURL:
+              sneaker.imageURL ??
+              raw.imageURL ??
+              "/images/placeholder-image.jpg",
+            price: Number(raw.price ?? sneaker.price ?? 0),
+            quantity: raw.quantity ?? 1,
+            size: raw.size ?? null,
+            color: raw.color ?? null,
+          },
+        ];
       }
 
-      cartItems = rawItems.map(mapCartItem);
+      cartItems = rawItems.flatMap(mapCartItem);
       totalPrice = calculateTotalPrice();
       renderCart();
     } catch (error) {
@@ -121,22 +152,44 @@ export function Cart() {
 
   async function confirmRemove(passedItem) {
     const target = passedItem || itemToRemove;
-    if (!target) {
-      console.error("No item to remove (itemToRemove is null)");
-      showRemoveModal = false;
-      itemToRemove = null;
-      renderCart();
-      return;
-    }
+    if (!target) return;
+
+    const backendId = target.id;
+    const productId = target.productId;
+    const localId = target.localId;
+    const removedQty = target.quantity || 1;
 
     try {
-      await removeFromCart(target.id);
-      cartItems = cartItems.filter((item) => item.id !== target.id);
+      const allLines = cartItems.filter((i) => i.id === backendId);
+      const backendTotal = allLines.reduce(
+        (s, it) => s + (it.quantity || 0),
+        0
+      );
+      const newBackendTotal = backendTotal - removedQty;
+
+      if (backendId) {
+        if (newBackendTotal > 0) {
+          await updateCartItem(backendId, { quantity: newBackendTotal });
+        } else {
+          await removeFromCart(backendId);
+        }
+      }
+
+      if (productId && localId) {
+        removeLocalEntry(productId, localId);
+      }
+
+      cartItems = cartItems.filter(
+        (i) => !(i.productId === productId && i.localId === localId)
+      );
+
       totalPrice = calculateTotalPrice();
       showRemoveModal = false;
       itemToRemove = null;
+
       const existingModal = document.getElementById("remove-modal");
       if (existingModal) existingModal.remove();
+
       renderCart();
     } catch (error) {
       console.error("Failed to remove item:", error);
@@ -154,8 +207,29 @@ export function Cart() {
 
     try {
       const item = cartItems[index];
-      await updateCartItem(item.id, { quantity: newQuantity });
+      const backendId = item.id;
+      const productId = item.productId;
+      const localId = item.localId;
+      const oldQty = item.quantity || 0;
+
+
+      const allLines = cartItems.filter((i) => i.id === backendId);
+      const backendTotal = allLines.reduce(
+        (s, it) => s + (it.quantity || 0),
+        0
+      );
+      const newBackendTotal = backendTotal - oldQty + newQuantity;
+
+      if (backendId) {
+        await updateCartItem(backendId, { quantity: newBackendTotal });
+      }
+
+      if (productId && localId) {
+        updateLocalEntry(productId, localId, { quantity: newQuantity });
+      }
+
       cartItems[index].quantity = newQuantity;
+
       totalPrice = calculateTotalPrice();
       renderCart();
     } catch (error) {
@@ -177,12 +251,10 @@ export function Cart() {
       })
     );
 
-    // Remove any existing cart summary to avoid duplicates
     const existingSummary = document.getElementById("cart-summary");
     if (existingSummary) existingSummary.remove();
 
     if (cartItems.length > 0) {
-      // Append the cart summary to the container (it has id 'cart-summary')
       container.appendChild(
         CartSummary({
           totalPrice,
@@ -192,14 +264,12 @@ export function Cart() {
     }
 
     if (showRemoveModal && itemToRemove) {
-      // remove any existing modal first
       const existing = document.getElementById("remove-modal");
       if (existing) existing.remove();
 
       document.body.appendChild(
         RemoveModal({
           item: itemToRemove,
-          // pass the current item to the confirm handler to avoid closure/null issues
           onConfirm: () => confirmRemove(itemToRemove),
           onCancel: cancelRemove,
         })
@@ -234,6 +304,5 @@ export function Cart() {
   }
 
   loadCart();
-
   return container;
 }

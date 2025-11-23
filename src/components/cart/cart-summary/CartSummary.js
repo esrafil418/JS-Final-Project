@@ -1,5 +1,5 @@
-import { El } from "../../utils/el";
-import { router } from "../../utils/router";
+import { El } from "../../../utils/el";
+import { router } from "../../../utils/router";
 
 export function CartSummary({ totalPrice, itemCount }) {
   return El({

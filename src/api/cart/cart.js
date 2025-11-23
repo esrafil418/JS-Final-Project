@@ -1,16 +1,12 @@
-import { BASE_URL } from "../constants";
-import { authHelper } from "../utils/auth";
+import { BASE_URL, ROUTES } from "../../constants";
+import { getAuthHeaders } from "../http/http";
 
 //! Get user's cart items
 export async function getCart() {
   try {
-    const token = authHelper.getToken();
-    const res = await fetch(`${BASE_URL}/cart`, {
+    const res = await fetch(`${BASE_URL}${ROUTES.CART}`, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "*/*",
-      },
+      headers: getAuthHeaders(),
     });
 
     if (!res.ok) throw new Error(`Failed to fetch cart: ${res.status}`);
@@ -24,14 +20,9 @@ export async function getCart() {
 //! Add product to cart
 export async function addToCart(productData) {
   try {
-    const token = authHelper.getToken();
-    const res = await fetch(`${BASE_URL}/cart`, {
+    const res = await fetch(`${BASE_URL}${ROUTES.CART}`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "*/*",
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(productData),
     });
 
@@ -46,14 +37,9 @@ export async function addToCart(productData) {
 //! Update cart item quantity or details
 export async function updateCartItem(itemId, updateData) {
   try {
-    const token = authHelper.getToken();
-    const res = await fetch(`${BASE_URL}/cart/${itemId}`, {
+    const res = await fetch(`${BASE_URL}${ROUTES.CART}/${itemId}`, {
       method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "*/*",
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(updateData),
     });
 
@@ -68,25 +54,18 @@ export async function updateCartItem(itemId, updateData) {
 //! Remove item from cart
 export async function removeFromCart(itemId) {
   try {
-    const token = authHelper.getToken();
-    const res = await fetch(`${BASE_URL}/cart/${itemId}`, {
+    const res = await fetch(`${BASE_URL}${ROUTES.CART}/${itemId}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "*/*",
-      },
+      headers: getAuthHeaders(),
     });
 
     if (!res.ok) throw new Error(`Failed to remove from cart: ${res.status}`);
 
-
-    // Read text and return parsed JSON only if present.
     const text = await res.text();
-    if (!text) return {}; // empty response -> return empty object
+    if (!text) return {};
     try {
       return JSON.parse(text);
     } catch (err) {
-      // If parsing fails, return raw text
       return text;
     }
   } catch (error) {

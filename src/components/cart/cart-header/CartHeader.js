@@ -1,4 +1,4 @@
-import { El } from "../../utils/el";
+import { El } from "../../../utils/el";
 
 export function CartHeader() {
   return El({
