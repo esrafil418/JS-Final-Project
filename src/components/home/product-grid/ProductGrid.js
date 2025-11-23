@@ -26,7 +26,6 @@ export function ProductGrid() {
   async function loadProducts(page = 1, reset = false) {
     if (isLoading) return;
 
-    console.log(`Loading page ${page}, reset: ${reset}`);
     isLoading = true;
 
     if (reset) {
@@ -95,7 +94,7 @@ export function ProductGrid() {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
     if (
-      scrollTop + clientHeight >= scrollHeight - 500 &&
+      scrollTop + clientHeight >= scrollHeight - 200 &&
       !isLoading &&
       hasMore
     ) {

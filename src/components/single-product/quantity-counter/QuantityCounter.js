@@ -1,52 +1,47 @@
-import { El } from "../../utils/el";
+import { El } from "../../../utils/el";
 
-/**
- * Quantity selector with increment/decrement buttons
- */
-export function QuantityCounter({ quantity, onQuantityChange }) {
+export function QuantityCounter({ quantity = 1, onQuantityChange }) {
+  const validQuantity = Math.max(1, quantity);
+
   return El({
     element: "div",
     className: "flex items-center justify-between",
     children: [
-      // Label
       El({
         element: "span",
         className: "font-semibold text-lg",
         innerText: "Quantity",
       }),
-      // Counter controls
       El({
         element: "div",
         className: "flex items-center border border-gray-300 rounded-lg",
         children: [
-          // Decrease button
           El({
             element: "button",
-            className: "px-4 py-2 text-lg disabled:opacity-50",
+            className:
+              "px-4 py-2 text-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors",
             innerText: "-",
-            disabled: quantity <= 1, // Prevent going below 1
+            disabled: validQuantity <= 1,
             eventListener: [
               {
                 event: "click",
-                callback: () => onQuantityChange(quantity - 1),
+                callback: () => onQuantityChange(validQuantity - 1),
               },
             ],
           }),
-          // Current quantity display
           El({
             element: "span",
-            className: "px-6 py-2 font-medium",
-            innerText: quantity,
+            className: "px-6 py-2 font-medium min-w-12 text-center",
+            innerText: validQuantity,
           }),
-          // Increase button
           El({
             element: "button",
-            className: "px-4 py-2 text-lg",
+            className: "px-4 py-2 text-lg hover:bg-gray-100 transition-colors",
             innerText: "+",
             eventListener: [
               {
                 event: "click",
-                callback: () => onQuantityChange(quantity + 1),
+                callback: () => onQuantityChange(validQuantity + 1),
               },
             ],
           }),

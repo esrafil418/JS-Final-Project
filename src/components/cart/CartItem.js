@@ -1,5 +1,5 @@
 import { El } from "../../utils/el";
-import { QuantityCounter } from "../single-product/QuantityCounter";
+import { QuantityCounter } from "../single-product";
 
 export function CartItem({ item, onRemove, onQuantityChange }) {
   return El({

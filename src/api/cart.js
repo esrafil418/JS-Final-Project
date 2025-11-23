@@ -79,8 +79,7 @@ export async function removeFromCart(itemId) {
 
     if (!res.ok) throw new Error(`Failed to remove from cart: ${res.status}`);
 
-    // Some backends return 204 No Content for successful DELETEs.
-    // Trying to call res.json() on an empty body throws JSON parsing errors.
+
     // Read text and return parsed JSON only if present.
     const text = await res.text();
     if (!text) return {}; // empty response -> return empty object
