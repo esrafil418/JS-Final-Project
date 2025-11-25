@@ -3,7 +3,7 @@ import { El } from "../../../utils/el";
 export function MostPopular() {
   return El({
     element: "div",
-    clasName: "mx-[1.5rem]",
+    className: "!mb-[0.95rem]",
     children: [
       El({
         element: "div",
@@ -11,7 +11,7 @@ export function MostPopular() {
         children: [
           El({
             element: "div",
-            className: "text-[1.25rem] font-600 text-[#152536]",
+            className: "text-[1.25rem] font-semibold text-[#152536]",
             innerHTML: "Most Popular",
           }),
           El({

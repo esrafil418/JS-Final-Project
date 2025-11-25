@@ -13,7 +13,7 @@ export function SearchBar({ placeholder = "Search", onSearch } = {}) {
   return El({
     element: "div",
     className:
-      "w-[23.75rem] h-[2.3125rem] flex items-center bg-[#fafafa] rounded-[0.25rem] mx-auto",
+      "w-[23.75rem] h-[2.3125rem] flex items-center bg-[#fafafa] rounded-[0.25rem] mx-auto mt-[0.4rem] !mb-[1.38rem]",
     children: [
       El({
         element: "img",

@@ -3,7 +3,7 @@ import { El } from "../../../utils/el";
 export function ProductImage({ imageURL, alt, className = "", children = [] }) {
   return El({
     element: "div",
-    className: `w-full h-80 bg-gray-100 rounded-lg overflow-hidden ${className}`,
+    className: `w-full h-95 bg-gray-100 rounded-lg overflow-hidden ${className}`,
     children: [
       El({
         element: "img",

@@ -42,18 +42,14 @@ export function SingleProduct({ sneakerId }) {
       if (isNaN(id) || id <= 0) throw new Error("Invalid product ID");
 
       const product = await getProductById(id);
-      const sizes = getAvailableSizes(product);
-      const colors = getAvailableColors(product);
 
-      // Check localStorage for previously selected size/color (selection key)
-      const localData =
-        JSON.parse(localStorage.getItem(`cart_item_select_${id}`) || "null") ||
-        {};
+      const availableSizes = getAvailableSizes(product);
+      const availableColors = getAvailableColors(product);
 
       updateState({
         product,
-        selectedSize: localData.size || sizes[0] || "",
-        selectedColor: localData.color || colors[0] || "",
+        selectedSize: availableSizes[0] || "",
+        selectedColor: availableColors[0] || "",
         isLoading: false,
       });
     } catch (err) {
@@ -122,7 +118,7 @@ export function SingleProduct({ sneakerId }) {
         children: [
           El({
             element: "div",
-            className: "absolute top-4 left-4 z-10",
+            className: "absolute top-4 left-0 z-10",
             children: [BackButton(ROUTES.HOME)],
           }),
         ],
@@ -148,32 +144,12 @@ export function SingleProduct({ sneakerId }) {
               SizeSelector({
                 sizes: getAvailableSizes(state.product),
                 selectedSize: state.selectedSize,
-                onSizeSelect: (size) => {
-                  updateState({ selectedSize: size });
-                  // Persist last selection (single object) separately from the cart entries array
-                  const selKey = `cart_item_select_${state.product.id}`;
-                  const prev =
-                    JSON.parse(localStorage.getItem(selKey) || "null") || {};
-                  localStorage.setItem(
-                    selKey,
-                    JSON.stringify({ ...prev, size })
-                  );
-                },
+                onSizeSelect: (size) => updateState({ selectedSize: size }),
               }),
               ColorSelector({
                 colors: getAvailableColors(state.product),
                 selectedColor: state.selectedColor,
-                onColorSelect: (color) => {
-                  updateState({ selectedColor: color });
-                  // Persist last selection (single object)
-                  const selKey = `cart_item_select_${state.product.id}`;
-                  const prev =
-                    JSON.parse(localStorage.getItem(selKey) || "null") || {};
-                  localStorage.setItem(
-                    selKey,
-                    JSON.stringify({ ...prev, color })
-                  );
-                },
+                onColorSelect: (color) => updateState({ selectedColor: color }),
               }),
             ],
           }),
@@ -195,70 +171,12 @@ export function SingleProduct({ sneakerId }) {
   }
 
   async function handleAddToCart() {
-    if (!state.selectedSize)
-      return showToast("Please select a size", "warning");
-    if (!state.selectedColor)
-      return showToast("Please select a color", "warning");
-
     try {
       const cartData = {
         sneakerId: state.product.id,
         quantity: state.quantity,
-        size: state.selectedSize,
-        color: state.selectedColor,
       };
-      console.log("Adding to cart:", cartData);
-      // Create a local line entry so different size/color selections create separate lines
-      const productKey = `cart_item_${state.product.id}`;
-      let existing = JSON.parse(localStorage.getItem(productKey) || "[]");
-      // Normalize existing to an array (handle legacy single-object entries)
-      if (!Array.isArray(existing)) {
-        if (existing && typeof existing === "object") existing = [existing];
-        else existing = [];
-      }
-      // If an entry with same size+color exists, increment its quantity; otherwise add new entry
-      const matchIdx = existing.findIndex(
-        (e) => e.size === state.selectedSize && e.color === state.selectedColor
-      );
-      let localId = null;
-      if (matchIdx !== -1) {
-        // increase existing entry quantity by the added amount
-        existing[matchIdx].quantity =
-          (existing[matchIdx].quantity || 0) + state.quantity;
-        localId = existing[matchIdx].localId || `l_${Date.now()}`;
-        existing[matchIdx].localId = localId;
-      } else {
-        localId = `l_${Date.now()}`;
-        const localEntry = {
-          localId,
-          size: state.selectedSize,
-          color: state.selectedColor,
-          quantity: state.quantity,
-        };
-        existing.push(localEntry);
-      }
-      localStorage.setItem(productKey, JSON.stringify(existing));
-
-      // Call backend to add to cart (backend may aggregate by sneakerId). We'll try to capture returned backend id to link later.
-      // Send only the delta quantity to backend
-      const delta = state.quantity;
-      const res = await addToCart({ ...cartData, quantity: delta });
-
-      // Attempt to extract backend cart item id from response and attach to local entry
-      try {
-        const backendId = res?.id ?? res?.data?.id ?? res?.data ?? null;
-        if (backendId) {
-          const updated = JSON.parse(localStorage.getItem(productKey) || "[]");
-          const idx = updated.findIndex((e) => e.localId === localId);
-          if (idx !== -1) {
-            updated[idx].backendId = backendId;
-            localStorage.setItem(productKey, JSON.stringify(updated));
-          }
-        }
-      } catch (e) {
-        // ignore
-      }
-
+      await addToCart(cartData);
       showToast("Product added to cart successfully!", "success");
     } catch (error) {
       console.error("Add to cart error:", error);

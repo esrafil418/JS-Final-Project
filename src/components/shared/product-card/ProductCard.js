@@ -9,7 +9,7 @@ export function ProductCard({ product }) {
   return El({
     element: "div",
     className:
-      "w-[11.375rem] h-[15.25rem] bg-white rounded-md overflow-hidden cursor-pointer hover:shadow-md transition-shadow",
+      "w-[11.375rem] h-[15.25rem] bg-white overflow-hidden cursor-pointer",
     onclick: () => router.navigate(`/product/${id}`),
     children: [
       // Image
@@ -20,9 +20,9 @@ export function ProductCard({ product }) {
         children: [
           El({
             element: "img",
-            src: imageURL,
+            src: imageURL || "/public/images/placeholder-image.png",
             alt: name,
-            className: "w-full h-full object-cover",
+            className: "w-full h-full object-cover rounded-[1.5rem]",
           }),
         ],
       }),
@@ -34,12 +34,12 @@ export function ProductCard({ product }) {
           El({
             element: "div",
             innerText: name,
-            className: "text-sm font-medium truncate",
+            className: "text-[1.25rem] text-[#152536] font-bold truncate",
           }),
           El({
             element: "div",
-            innerText: `$${price}`,
-            className: "text-xs text-gray-500",
+            innerText: `$ ${price}.00`,
+            className: "text-[1rem] text-[#152536] font-semibold",
           }),
         ],
       }),

@@ -26,34 +26,40 @@ export function ColorSelector({ colors = [], selectedColor, onColorSelect }) {
     children: [
       El({
         element: "h3",
-        className: "font-semibold text-lg",
+        className: "font-semibold text-[1rem]",
         innerText: "Color",
       }),
 
       El({
         element: "div",
-        className: "flex gap-3",
+        className: "flex gap-3 overflow-x-auto flex-nowrap",
         children: colors.map((color) => {
-          const code = colorCode(color);
+          const code = colorMap(color);
           const normalized = color.trim();
           const isSelected = selectedColor === normalized;
 
           return El({
             element: "button",
-            className: `w-10 h-10 rounded-full border-2 transition-all 
-              ${
-                isSelected
-                  ? "border-black ring-2 ring-black ring-offset-2"
-                  : "border-gray-300"
-              }
-            `,
-            restAttrs: { style: `background-color: ${code};` },
-            title: normalized,
+            className:
+              "w-10 h-10 shrink-0 rounded-full relative flex items-center justify-center transition",
+            restAttrs: { style: `background-color: ${code}` },
+
+            children: [
+              isSelected
+                ? El({
+                    element: "span",
+                    className: `absolute inset-0 flex items-center justify-center text-lg ${
+                      color === "black" || color === "blue"
+                        ? "text-white"
+                        : "text-black"
+                    }`,
+                    innerText: "✔",
+                  })
+                : [],
+            ],
+
             eventListener: [
-              {
-                event: "click",
-                callback: () => onColorSelect(normalized),
-              },
+              { event: "click", callback: () => onColorSelect(normalized) },
             ],
           });
         }),
@@ -62,10 +68,10 @@ export function ColorSelector({ colors = [], selectedColor, onColorSelect }) {
   });
 }
 
-function colorCode(name) {
+function colorMap(name) {
   const map = {
     black: "#000",
-    white: "#fff",
+    white: "#f1f1f1",
     brown: "#8B4513",
     blue: "#00f",
     red: "#f00",

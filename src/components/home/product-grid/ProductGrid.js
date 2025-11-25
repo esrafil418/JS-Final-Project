@@ -14,12 +14,12 @@ export function ProductGrid() {
 
   const gridContainer = El({
     element: "div",
-    className: "grid grid-cols-2 gap-4 min-h-[200px]",
+    className: "grid grid-cols-2 gap-4 min-h-[200px] ",
   });
 
   const container = El({
     element: "div",
-    className: "p-4",
+    className: "mx-[1.5rem]",
     children: [gridContainer],
   });
 
@@ -34,7 +34,7 @@ export function ProductGrid() {
         gridContainer.appendChild(
           El({
             element: "div",
-            className: "w-full h-64 bg-gray-200 rounded-md animate-pulse",
+            className: "w-full h-64 bg-gray-200 rounded-[1.5rem] animate-pulse",
           })
         );
       }

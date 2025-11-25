@@ -12,7 +12,7 @@ export function HeaderBar() {
   return El({
     element: "div",
     className:
-      "w-[23.75rem] h-[5rem] flex items-center justify-between mx-auto !mb-[0.5rem]",
+      "w-[23.75rem] h-[4.7rem] flex items-center justify-between mx-auto !mb-[0.1rem]",
     children: [
       //! Left section: Greeting and username
       El({
@@ -38,7 +38,7 @@ export function HeaderBar() {
           El({
             element: "div",
             innerText: getUserName(),
-            className: "text-[1rem] font-bold text-[#152536] mt-[0.625rem]",
+            className: "text-[1rem] font-bold text-[#152536] mt-[0.125rem]",
           }),
         ],
       }),

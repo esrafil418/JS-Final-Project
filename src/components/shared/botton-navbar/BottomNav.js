@@ -7,7 +7,7 @@ export function BottomNav() {
   const navWrap = El({
     element: "div",
     className:
-      "fixed bottom-0 left-0 w-[428px] h-[66px] bg-white border-t border-gray-200 flex items-center justify-around z-50",
+      "fixed bottom-0 left-0 w-[23.75rem] h-[4.125rem] bg-white flex items-center justify-around z-50 mx-[1.5rem]",
   });
 
   const items = [
@@ -18,27 +18,32 @@ export function BottomNav() {
     { key: "profile", icon: ICONS.PROFILE },
   ];
 
-  function getCurrentPath() {
-    return window.location.pathname || ROUTES.HOME;
+  function updateActive() {
+    const current = window.location.pathname;
+
+    [...navWrap.children].forEach((btn) => {
+      const route = btn.getAttribute("data-route");
+      const img = btn.querySelector("img");
+
+      img.style.opacity = route === current ? "1" : "0.6";
+    });
   }
 
-  function render() {
-    navWrap.innerHTML = "";
-    const current = getCurrentPath();
-    for (const it of items) {
-      const isActive = current === it.route;
+  function createNav() {
+    items.forEach((it) => {
       const btn = El({
         element: "button",
         className:
-          `flex flex-col items-center justify-center gap-1 w-[56px] h-full transition-all ` +
-          (isActive ? "text-black" : "text-gray-400"),
+          "flex flex-col items-center justify-center w-[3.5rem] h-full",
+        restAttrs: {
+          "data-route": it.route || "",
+        },
         eventListener: [
           {
             event: "click",
             callback: () => {
               if (it.route) router.navigate(it.route);
-              router.navigate(it.route);
-              setTimeout(render, 50);
+              updateActive();
             },
           },
         ],
@@ -46,18 +51,20 @@ export function BottomNav() {
           El({
             element: "img",
             src: it.icon,
-            className: `w-6 h-6 ${isActive ? "opacity-100" : "opacity-60"}`,
+            className: "w-[1.8rem] opacity-60 transition-all",
             restAttrs: { alt: it.key },
           }),
         ],
       });
+
       navWrap.appendChild(btn);
-    }
+    });
   }
 
-  render();
+  createNav();
+  updateActive();
 
-  window.addEventListener("popstate", render);
+  window.addEventListener("popstate", updateActive);
 
   return navWrap;
 }

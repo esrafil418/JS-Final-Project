@@ -26,7 +26,7 @@ export function SizeSelector({ sizes = [], selectedSize, onSizeSelect }) {
     children: [
       El({
         element: "h3",
-        className: "font-semibold text-lg",
+        className: "font-semibold text-[1rem] text-[#152536]",
         innerText: "Size",
       }),
       El({
@@ -35,10 +35,10 @@ export function SizeSelector({ sizes = [], selectedSize, onSizeSelect }) {
         children: sizes.map((size) =>
           El({
             element: "button",
-            className: `w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all font-medium ${
+            className: `w-10 h-10 rounded-full border-2 flex items-center justify-center font-medium ${
               selectedSize === size
                 ? "border-black bg-black text-white"
-                : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                : "border-gray-300 text-[#152536]"
             }`,
             innerText: size,
             eventListener: [

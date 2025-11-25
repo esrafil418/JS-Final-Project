@@ -44,10 +44,10 @@ export function BrandScroller() {
         El({
           element: "button",
           innerText: capitalize(label),
-          className: `px-4 py-2 rounded-[1.5625rem] text-[1rem] font-600 text-[#343A40] whitespace-nowrap transition-all ${
+          className: `px-4 py-[0.310rem] rounded-[1.5625rem] text-[1rem] font-600 text-[#343A40] whitespace-nowrap ${
             isSelected
-              ? "bg-[#343A40] text-white shadow-sm"
-              : "bg-white border border-gray-200 text-gray-700 hover:scale-105 hover:border-gray-300"
+              ? "bg-[#343A40] text-white border border-2 border-[#343A40]"
+              : "bg-white border border-2 border-[#343A40]"
           }`,
           eventListener: [
             {
