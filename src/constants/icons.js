@@ -14,4 +14,5 @@ export const ICONS = {
   LOCK: "/icons/lock-svgrepo-com.svg",
   HAND_EMOJI: "/images/👋.png",
   STAR: "/icons/star-sharp-svgrepo-com.svg",
+  ADD_TO_CART: "/public/icons/add-to-cart.svg",
 };

@@ -53,23 +53,18 @@ export async function updateCartItem(itemId, updateData) {
 
 //! Remove item from cart
 export async function removeFromCart(itemId) {
+  const res = await fetch(`${BASE_URL}${ROUTES.CART}/${itemId}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to remove from cart: ${res.status}`);
+  }
+
   try {
-    const res = await fetch(`${BASE_URL}${ROUTES.CART}/${itemId}`, {
-      method: "DELETE",
-      headers: getAuthHeaders(),
-    });
-
-    if (!res.ok) throw new Error(`Failed to remove from cart: ${res.status}`);
-
-    const text = await res.text();
-    if (!text) return {};
-    try {
-      return JSON.parse(text);
-    } catch (err) {
-      return text;
-    }
-  } catch (error) {
-    console.error("Remove from cart error:", error);
-    throw error;
+    return await res.json();
+  } catch {
+    return {};
   }
 }

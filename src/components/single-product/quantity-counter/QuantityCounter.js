@@ -27,7 +27,8 @@ export function QuantityCounter({ quantity = 1, onQuantityChange }) {
             eventListener: [
               {
                 event: "click",
-                callback: () => onQuantityChange(1, validQuantity - 1),
+                callback: () =>
+                  onQuantityChange(Math.max(1, validQuantity - 1)),
               },
             ],
           }),
@@ -44,7 +45,7 @@ export function QuantityCounter({ quantity = 1, onQuantityChange }) {
               {
                 event: "click",
                 callback: () =>
-                  onQuantityChange(maxQuantity, validQuantity + 1),
+                  onQuantityChange(Math.min(maxQuantity, validQuantity + 1)),
               },
             ],
           }),

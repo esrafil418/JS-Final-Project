@@ -43,13 +43,8 @@ export function SingleProduct({ sneakerId }) {
 
       const product = await getProductById(id);
 
-      const availableSizes = getAvailableSizes(product);
-      const availableColors = getAvailableColors(product);
-
       updateState({
         product,
-        selectedSize: availableSizes[0] || "",
-        selectedColor: availableColors[0] || "",
         isLoading: false,
       });
     } catch (err) {
@@ -171,13 +166,22 @@ export function SingleProduct({ sneakerId }) {
   }
 
   async function handleAddToCart() {
+    if (!state.selectedSize) {
+      return showToast("Please select a size first", "warning");
+    }
+
+    if (!state.selectedColor) {
+      return showToast("Please select a color first", "warning");
+    }
+
     try {
       const cartData = {
         sneakerId: state.product.id,
         quantity: state.quantity,
       };
+
       await addToCart(cartData);
-      showToast("Product added to cart successfully!", "success");
+      showToast("Successfully added to cart", "success");
     } catch (error) {
       console.error("Add to cart error:", error);
       showToast("Failed to add product to cart", "error");
@@ -188,7 +192,7 @@ export function SingleProduct({ sneakerId }) {
     const backgrounds = {
       success: "#4CAF50",
       error: "#f44336",
-      warning: "#a19700",
+      warning: "#630b0b",
       info: "#2196F3",
     };
     Toastify({
