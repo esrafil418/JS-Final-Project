@@ -15,4 +15,6 @@ export const ICONS = {
   HAND_EMOJI: "/images/👋.png",
   STAR: "/icons/star-sharp-svgrepo-com.svg",
   ADD_TO_CART: "/public/icons/add-to-cart.svg",
+  EMPTY_IMAGE: "/public/images/placeholder-image.png",
+  TRASH: "/public/icons/trash-bin-2-svgrepo-com.svg",
 };

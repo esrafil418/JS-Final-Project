@@ -36,7 +36,7 @@ export function PriceSection({ price, quantity, onAddToCart }) {
             children: [
               El({
                 element: "img",
-                src: "/public/icons/add-to-cart.svg",
+                src: ICONS.ADD_TO_CART,
                 className: "w-5 h-5",
               }),
             ],
