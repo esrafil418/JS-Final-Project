@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tailwind-scrollbar-hide/v4";
 
 @font-face {
   font-family: "Inter";
@@ -16,4 +17,8 @@
   font-weight: 100 900;
   font-style: italic;
   font-display: swap;
+}
+
+body {
+  font-family: "Inter";
 }

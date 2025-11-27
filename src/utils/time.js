@@ -1,0 +1,7 @@
+export function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 13) return "Good Morning";
+  if (hour >= 13 && hour < 17) return "Good Afternoon";
+  if (hour >= 17 && hour < 21) return "Good Evening";
+  return "Good Night";
+}
