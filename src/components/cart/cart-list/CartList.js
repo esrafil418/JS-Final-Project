@@ -9,7 +9,7 @@ export function CartList({ cartItems, onRemoveItem, onUpdateQuantity }) {
 
   return El({
     element: "div",
-    className: "p-4 pb-32 max-w-[400px] mx-auto w-full",
+    className: "p-4 pb-32 max-w-[480px] mx-auto w-full",
     children: cartItems.map((item, index) =>
       CartItem({
         item,

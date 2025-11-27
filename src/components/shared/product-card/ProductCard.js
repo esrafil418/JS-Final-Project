@@ -1,3 +1,4 @@
+import { ICONS } from "../../../constants/icons";
 import { El } from "../../../utils/el";
 import { router } from "../../../utils/router";
 
@@ -20,7 +21,7 @@ export function ProductCard({ product }) {
         children: [
           El({
             element: "img",
-            src: imageURL || "/public/images/placeholder-image.png",
+            src: imageURL || ICONS.EMPTY_IMAGE,
             alt: name,
             className: "w-full h-full object-cover rounded-[1.5rem]",
           }),

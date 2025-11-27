@@ -8,6 +8,7 @@ import { Slide2 } from "./Slide2";
 import { Slide3 } from "./Slide3";
 import { Slide4 } from "./Slide4";
 import { Slide5 } from "./Slide5";
+import { ROUTES } from "../../constants";
 
 export function Onboarding() {
   const container = El({ element: "div", className: "swiper h-screen w-full" });
@@ -17,7 +18,7 @@ export function Onboarding() {
 
   const finishOnboarding = () => {
     localStorage.setItem("onboarded", "true");
-    router.navigate(localStorage.getItem("token") ? "/home" : "/signup");
+    router.navigate(ROUTES.SIGNUP);
   };
 
   const slides = [

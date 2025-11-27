@@ -4,7 +4,7 @@ export function RemoveModal({ item, onConfirm, onCancel }) {
   return El({
     element: "div",
     id: "remove-modal",
-    className: "fixed inset-0 bg-black bg-opacity-50 flex items-end z-50",
+    className: "fixed inset-0 bg-gray-800/70 flex items-end z-50",
     children: [
       El({
         element: "div",

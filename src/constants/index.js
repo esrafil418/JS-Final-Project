@@ -19,4 +19,6 @@ export const API_ENDPOINTS = {
   PRODUCTS: "/sneaker",
   PRODUCT_ITEM: "/sneaker/item",
   BRANDS: "/sneaker/brands",
+  AUTH_SIGNUP: "/auth/signup",
+  AUTH_LOGIN: "/auth/login",
 };

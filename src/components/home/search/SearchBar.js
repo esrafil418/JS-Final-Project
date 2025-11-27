@@ -8,7 +8,7 @@ export function SearchBar({ placeholder = "Search", onSearch } = {}) {
       new CustomEvent("searchChange", { detail: { query } })
     );
     onSearch?.(query);
-  }, 500);
+  }, 2000);
 
   return El({
     element: "div",

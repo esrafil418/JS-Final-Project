@@ -1,6 +1,4 @@
 import { El } from "../../utils/el";
-import { router } from "../../utils/router";
-import { authRequest } from "../../api/auth/authorization";
 import { BackButton } from "../base/buttons/BackButton";
 import { Logo } from "../base/logos/Logo";
 import { FormTitle } from "../base/titles/FormTitle";
@@ -8,7 +6,7 @@ import { usernameInput } from "../base/inputs/UsernameInput";
 import { PasswordInput } from "../base/inputs/PasswordInput";
 import { SwitchButton } from "../base/buttons/SwitchButton";
 import { SubmitButton } from "../base/buttons/SubmitButton";
-import { ROUTES } from "../../constants";
+import { API_ENDPOINTS, ROUTES } from "../../constants";
 
 export function updateButtonState() {
   const username = document.getElementById("username").value.trim();
@@ -29,7 +27,8 @@ export function updateButtonState() {
 export function AuthForm({ type, title, buttonText, switchText, switchRoute }) {
   let showPassword = false;
 
-  const endpoint = type === "login" ? "/auth/login" : "/auth/signup";
+  const endpoint =
+    type === "login" ? API_ENDPOINTS.AUTH_LOGIN : API_ENDPOINTS.AUTH_SIGNUP;
 
   const container = El({
     element: "div",

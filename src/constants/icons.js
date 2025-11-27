@@ -1,5 +1,6 @@
 export const ICONS = {
   SEARCH: "/icons/input-prefix.svg",
+  ELLIPSE: "/icons/Ellipse 1.png",
   BELL: "/icons/bell.svg",
   HEART: "/icons/heart.svg",
   HOME: "/icons/home.svg",
@@ -10,11 +11,12 @@ export const ICONS = {
   EYE: "/icons/eye-svgrepo-com.svg",
   EYE_SLASH: "/icons/eye-slash-fill-svgrepo-com.svg",
   LOGO: "/icons/Vector 1.png",
+  LOGO_1: "/icons/logo.png",
   EMAIL: "/icons/email-14-svgrepo-com.svg",
   LOCK: "/icons/lock-svgrepo-com.svg",
   HAND_EMOJI: "/images/👋.png",
   STAR: "/icons/star-sharp-svgrepo-com.svg",
-  ADD_TO_CART: "/public/icons/add-to-cart.svg",
-  EMPTY_IMAGE: "/public/images/placeholder-image.png",
-  TRASH: "/public/icons/trash-bin-2-svgrepo-com.svg",
+  ADD_TO_CART: "/icons/add-to-cart.svg",
+  EMPTY_IMAGE: "/images/placeholder-image.png",
+  TRASH: "/icons/trash-bin-2-svgrepo-com.svg",
 };

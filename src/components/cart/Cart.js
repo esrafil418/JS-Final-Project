@@ -4,38 +4,8 @@ import { CartList } from "./cart-list/CartList";
 import { CartSummary } from "./cart-summary/CartSummary";
 import { RemoveModal } from "./remove-modal/RemoveModal";
 import { BottomNav } from "../shared/botton-navbar";
+
 import { getCart, removeFromCart, updateCartItem } from "../../api/cart/cart";
-
-
-function loadLocalEntries(productId) {
-  const data = localStorage.getItem(`cart_item_${productId}`);
-  return data ? JSON.parse(data) : [];
-}
-
-function saveLocalEntries(productId, entries) {
-  localStorage.setItem(`cart_item_${productId}`, JSON.stringify(entries));
-}
-
-function addLocalEntry(productId, entry) {
-  const entries = loadLocalEntries(productId);
-  entries.push(entry);
-  saveLocalEntries(productId, entries);
-}
-
-function updateLocalEntry(productId, localId, patch) {
-  const entries = loadLocalEntries(productId);
-  const idx = entries.findIndex((e) => e.localId === localId);
-  if (idx === -1) return;
-  entries[idx] = { ...entries[idx], ...patch };
-  saveLocalEntries(productId, entries);
-}
-
-function removeLocalEntry(productId, localId) {
-  const entries = loadLocalEntries(productId).filter(
-    (e) => e.localId !== localId
-  );
-  saveLocalEntries(productId, entries);
-}
 
 export function Cart() {
   let cartItems = [];
@@ -69,12 +39,8 @@ export function Cart() {
     ],
   });
 
-  function calculateTotalPrice() {
-    return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-  }
+  const calculateTotal = () =>
+    cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   async function loadCart() {
     try {
@@ -84,115 +50,53 @@ export function Cart() {
       if (Array.isArray(backendCart)) rawItems = backendCart;
       else if (Array.isArray(backendCart.items)) rawItems = backendCart.items;
       else if (Array.isArray(backendCart.cart)) rawItems = backendCart.cart;
-      else if (backendCart.user && Array.isArray(backendCart.user.cart))
-        rawItems = backendCart.user.cart;
-      else rawItems = [];
+      else if (backendCart.user?.cart) rawItems = backendCart.user.cart;
 
-      function mapCartItem(raw) {
-        const sneaker = raw.sneaker || raw.product || {};
+      cartItems = rawItems.map((raw) => {
+        const product = raw.sneaker || raw.product || raw;
+        return {
+          id: raw.id || raw._id,
+          name: product.name || "",
+          imageURL: product.imageURL || "/images/placeholder-image.jpg",
+          price: Number(raw.price || product.price || 0),
+          quantity: raw.quantity || 1,
+          size: raw.size || null,
+          color: raw.color || null,
+        };
+      });
 
-        // cartItemId is the backend cart record id (used for PATCH/DELETE)
-        const cartItemId = raw.id ?? raw._id ?? null;
-        // productId is the sneaker/product id used for local storage of selected size/color
-        const productId = sneaker.id ?? sneaker.pid ?? null;
-
-        const localEntries = productId ? loadLocalEntries(productId) : [];
-
-
-        if (localEntries && localEntries.length > 0) {
-          return localEntries.map((le) => ({
-            id: cartItemId,
-            productId,
-            localId: le.localId,
-            name: sneaker.name ?? raw.name ?? "",
-            imageURL:
-              sneaker.imageURL ??
-              raw.imageURL ??
-              "/images/placeholder-image.jpg",
-            price: Number(raw.price ?? sneaker.price ?? 0),
-            quantity: le.quantity ?? 1,
-            size: le.size ?? null,
-            color: le.color ?? null,
-          }));
-        }
-
-
-        return [
-          {
-            id: cartItemId,
-            productId,
-            localId: null,
-            name: sneaker.name ?? raw.name ?? "",
-            imageURL:
-              sneaker.imageURL ??
-              raw.imageURL ??
-              "/images/placeholder-image.jpg",
-            price: Number(raw.price ?? sneaker.price ?? 0),
-            quantity: raw.quantity ?? 1,
-            size: raw.size ?? null,
-            color: raw.color ?? null,
-          },
-        ];
-      }
-
-      cartItems = rawItems.flatMap(mapCartItem);
-      totalPrice = calculateTotalPrice();
+      totalPrice = calculateTotal();
       renderCart();
-    } catch (error) {
-      console.error("Failed to load cart:", error);
+    } catch (err) {
+      console.error("Failed to load cart:", err);
       renderError();
     }
   }
 
-  async function handleRemoveItem(index) {
+  function handleRemoveItem(index) {
     itemToRemove = cartItems[index];
     showRemoveModal = true;
     renderCart();
   }
 
-  async function confirmRemove(passedItem) {
-    const target = passedItem || itemToRemove;
-    if (!target) return;
-
-    const backendId = target.id;
-    const productId = target.productId;
-    const localId = target.localId;
-    const removedQty = target.quantity || 1;
+  async function confirmRemove() {
+    if (!itemToRemove) return;
 
     try {
-      const allLines = cartItems.filter((i) => i.id === backendId);
-      const backendTotal = allLines.reduce(
-        (s, it) => s + (it.quantity || 0),
-        0
-      );
-      const newBackendTotal = backendTotal - removedQty;
+      await removeFromCart(itemToRemove.id);
 
-      if (backendId) {
-        if (newBackendTotal > 0) {
-          await updateCartItem(backendId, { quantity: newBackendTotal });
-        } else {
-          await removeFromCart(backendId);
-        }
-      }
+      cartItems = cartItems.filter((i) => i.id !== itemToRemove.id);
+      totalPrice = calculateTotal();
 
-      if (productId && localId) {
-        removeLocalEntry(productId, localId);
-      }
-
-      cartItems = cartItems.filter(
-        (i) => !(i.productId === productId && i.localId === localId)
-      );
-
-      totalPrice = calculateTotalPrice();
       showRemoveModal = false;
       itemToRemove = null;
 
-      const existingModal = document.getElementById("remove-modal");
-      if (existingModal) existingModal.remove();
+      const modal = document.getElementById("remove-modal");
+      if (modal) modal.remove();
 
       renderCart();
-    } catch (error) {
-      console.error("Failed to remove item:", error);
+    } catch (err) {
+      console.error("Failed to remove item:", err);
     }
   }
 
@@ -202,38 +106,19 @@ export function Cart() {
     renderCart();
   }
 
-  async function handleUpdateQuantity(index, newQuantity) {
-    if (newQuantity < 1) return;
+  async function handleUpdateQuantity(index, newQty) {
+    if (newQty < 1) return;
+
+    const item = cartItems[index];
 
     try {
-      const item = cartItems[index];
-      const backendId = item.id;
-      const productId = item.productId;
-      const localId = item.localId;
-      const oldQty = item.quantity || 0;
+      await updateCartItem(item.id, { quantity: newQty });
+      cartItems[index].quantity = newQty;
 
-
-      const allLines = cartItems.filter((i) => i.id === backendId);
-      const backendTotal = allLines.reduce(
-        (s, it) => s + (it.quantity || 0),
-        0
-      );
-      const newBackendTotal = backendTotal - oldQty + newQuantity;
-
-      if (backendId) {
-        await updateCartItem(backendId, { quantity: newBackendTotal });
-      }
-
-      if (productId && localId) {
-        updateLocalEntry(productId, localId, { quantity: newQuantity });
-      }
-
-      cartItems[index].quantity = newQuantity;
-
-      totalPrice = calculateTotalPrice();
+      totalPrice = calculateTotal();
       renderCart();
-    } catch (error) {
-      console.error("Failed to update quantity:", error);
+    } catch (err) {
+      console.error("Failed to update quantity:", err);
     }
   }
 
@@ -270,7 +155,7 @@ export function Cart() {
       document.body.appendChild(
         RemoveModal({
           item: itemToRemove,
-          onConfirm: () => confirmRemove(itemToRemove),
+          onConfirm: confirmRemove,
           onCancel: cancelRemove,
         })
       );

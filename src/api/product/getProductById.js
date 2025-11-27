@@ -30,7 +30,7 @@ export async function getProductById(sneakerId) {
       throw new Error(`Product with ID ${sneakerId} not found`);
     }
 
-    console.log("✅ Product fetched successfully:", product);
+    console.log("Product fetched successfully:", product);
 
     return product;
   } catch (error) {

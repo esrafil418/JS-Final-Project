@@ -1,11 +1,11 @@
 import { BaseSlide } from "./BaseSlide";
 import { router } from "../../utils/router";
+import { ROUTES } from "../../constants";
 
 export function Slide5() {
   const finishOnboarding = () => {
     localStorage.setItem("onboarded", "true");
-    const token = localStorage.getItem("token");
-    router.navigate(token ? "/home" : "/signup");
+    router.navigate(ROUTES.SIGNUP);
   };
 
   return BaseSlide({

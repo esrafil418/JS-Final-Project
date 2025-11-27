@@ -13,6 +13,7 @@ import {
 import { ROUTES } from "../../constants";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
+import { ICONS } from "../../constants/icons";
 
 export function SingleProduct({ sneakerId }) {
   const container = El({
@@ -107,7 +108,7 @@ export function SingleProduct({ sneakerId }) {
 
     content.appendChild(
       ProductImage({
-        imageURL: state.product.imageURL || "/images/placeholder-image.png",
+        imageURL: state.product.imageURL || ICONS.EMPTY_IMAGE,
         alt: state.product.name,
         className: "relative",
         children: [

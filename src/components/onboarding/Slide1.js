@@ -1,4 +1,5 @@
 import { El } from "../../utils/el";
+import { ICONS } from "../../constants/icons";
 
 export function Slide1() {
   return El({
@@ -17,13 +18,13 @@ export function Slide1() {
                 element: "div",
                 className:
                   "relative w-[3.6875rem] h-[3.6875rem] bg-black bg-center bg-cover rounded-full",
-                style: { backgroundImage: "url('/icons/Ellipse 1.png')" },
+                style: { backgroundImage: `url(${ICONS.ELLIPSE})` },
                 children: [
                   El({
                     element: "img",
                     className:
                       "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1.65875rem] h-[2.495625rem] object-contain",
-                    src: "/icons/logo.png",
+                    src: ICONS.LOGO_1,
                   }),
                 ],
               }),

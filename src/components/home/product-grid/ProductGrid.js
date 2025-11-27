@@ -35,6 +35,7 @@ export function ProductGrid() {
           El({
             element: "div",
             className: "w-full h-64 bg-gray-200 rounded-[1.5rem] animate-pulse",
+            // animate-pulse : https://tailwindcss.com/docs/animation
           })
         );
       }
@@ -116,10 +117,15 @@ export function ProductGrid() {
     loadProducts(1, true);
   }
 
+  // brandChange
   window.addEventListener("brandChange", (e) =>
     handleBrandChange(e.detail.brand)
   );
+
+  // searchChange
   window.addEventListener("searchChange", (e) => handleSearch(e.detail.query));
+
+  // scroll
   window.addEventListener("scroll", handleScroll);
 
   loadProducts(1, true, currentBrand);
